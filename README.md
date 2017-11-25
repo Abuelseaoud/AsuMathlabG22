@@ -1,4 +1,4 @@
-# ASU Math Lab
+﻿# ASU Math Lab
 
 ## Introduction        
 Mathematical library software. Similar to Matlab, Octave and similar tools
@@ -19,11 +19,12 @@ Mathematical library software. Similar to Matlab, Octave and similar tools
 ### Phase 1: Core Operations
 
 #### Description:
-* Implement C++ class for matrix
-* Support dynamic creation and destruction of matrices of any size
-* Support addition, subtraction, multiplication, transpose and division
-* Process input user commands and show results directly 
-* Process input file, show each step result then exit
+
+* Implement C++ class for matrix .
+* Support dynamic creation and destruction of matrices of any size .
+* Support addition, subtraction, multiplication, transpose and division .
+* Process input user commands and show results directly .
+* Process input file, show each step result then exit.
 
 #### Code: 
 
