@@ -38,7 +38,7 @@ F = A / B ;
 G = A’ ;
 ```
 
-### Phase 2: Advanced Operations and Tuning
+### Phase 2: Advanced Operations &upgrading and Tuning 
 
 #### Description
 - upport mathematical functions. 
