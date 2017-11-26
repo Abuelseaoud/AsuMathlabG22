@@ -12,6 +12,7 @@ class CMatrix
 
 	int nR, nC;
 	double** values;
+	int checkzero(int r,int c);
 public:
 
 	CMatrix();                                      /* default Constructor */

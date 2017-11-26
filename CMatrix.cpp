@@ -178,21 +178,65 @@ CMatrix CMatrix::getMinor(int r, int c)
 	}
 }
 /////////////////////////////////////////* to calculate the DETERMINANT of the matrix *////////////////////////////
+int CMatrix::checkzero(int r, int c)
+{
+	int flag=0;
+	if(values[r][c]==0)
+	{
+		for(int x=0;x<nR;x++)
+		{
+			if(values[x][c]!=0)
+			{
+				for(int k=0;k<nC;k++)
+				{
+					values[r][k]=values[r][k]+values[x][k];
+					flag=1;
+
+				}
+			}
+			if(flag==1){return 1 ; break;}
+		}
+
+	}
+	else
+	{
+		return 1;
+	}
+	if (flag==0)return 0;
+}
 double CMatrix::getDeterminant()
 {
 	if (nR != nC)throw(" error:Invalid matrix dimension(not square matrix) in getDeterminant() function ");
 	if (nR == 0 && nC == 0)throw(" error:undefined matrix(0x0) in getDeterminant()nfunction ");
 	else
 	{
-
-		if (nR == 1 && nC == 1)return values[0][0];
-		double value = 0, m = 1;
-		for (int iR = 0; iR<nR; iR++)
+		CMatrix m=*this;
+		
+		for(int i=1;i<m.nR;i++)
 		{
-			value += m * values[0][iR] * getMinor(0, iR).getDeterminant();
-			m *= -1;
+			for(int j=0;j<i;j++)
+			{
+				double k;
+				if(m.values[j][j]==0)
+				{
+					int v=m.checkzero(j,j);
+					if(v==0) return 0;
+				}
+				k=(-1*m.values[i][j])/m.values[j][j];
+				for(int x=0;x<m.nC;x++)
+				{
+					m.values[i][x]=m.values[i][x]+(k*m.values[j][x]);
+				}
+
+			}
 		}
-		return value;
+		double det =1.0;
+		for (int u=0;u<m.nR;u++)
+		{
+			det=det*m.values[u][u];
+		}
+		return det;
+
 	}
 }
 
@@ -649,7 +693,7 @@ string CMatrix::getString()
 		for (int iC = 0; iC<nC; iC++)
 		{
 			char buffer[50];
-			snprintf(buffer,50, "%g\t", values[iR][iC]);
+			snprintf(buffer,50, "%6.04f\t", values[iR][iC]);
 			s += buffer;
 		} s += "\n";
 	}

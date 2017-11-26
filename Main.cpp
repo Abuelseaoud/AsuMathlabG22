@@ -5,7 +5,10 @@
 #include <string.h>
 #include <stdlib.h>
 #include <fstream>
+#include <cstdio>
+#include <exception>
 using namespace std;
+
 //global variables 
 string varName, Matrix1, Matrix2, Matrix3;
 char Operator;
@@ -222,6 +225,7 @@ void excute(string operation)
 		case '/':
 		{
 					if (M1 == -1 || M2 == -1) throw("Error:you try to make operation on undefine matrix");
+					if(Matrices[M2].getDeterminant()==0) {cout<<"error:can't measure div as a second Matrix is a singular Matrix "<<endl; break;}
 					else
 					{
 						CMatrix result = Matrices[M1] / Matrices[M2];
@@ -343,8 +347,8 @@ void excute(string operation)
 		}
 
 	}
-	
-cout<<endl;
+cout<<endl<<endl<<endl;	
+
 }
 
 
@@ -352,6 +356,7 @@ cout<<endl;
 
 int main(int argc, char*argv[])
 {
+	
 	
 		    try
 			{
@@ -361,6 +366,7 @@ int main(int argc, char*argv[])
 				{
 					while (1)
 					{
+
 						getline(cin, op);
 						int m;
 						m = op.find("[");
@@ -414,9 +420,9 @@ int main(int argc, char*argv[])
 							}
 						}
 
-						if(op.find("[")==-1) trimSpace(op);
+						if(op.find("[")==-1) {trimSpace(op); cout<<op<<endl;}
 						excute(op);
-						
+
 
 					}
 				}
