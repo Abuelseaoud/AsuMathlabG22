@@ -183,7 +183,7 @@ int CMatrix::checkzero(int r, int c)
 	int flag=0;
 	if(values[r][c]==0)
 	{
-		for(int x=0;x<nR;x++)
+		for(int x=r+1;x<nR;x++)
 		{
 			if(values[x][c]!=0)
 			{
@@ -211,8 +211,25 @@ double CMatrix::getDeterminant()
 	else
 	{
 		CMatrix m=*this;
-		
-		for(int i=1;i<m.nR;i++)
+		for(int i=0;i<(m.nR-1);i++)
+		{
+			if(m.values[i][i]==0)
+			{
+			   	int v=m.checkzero(i,i);
+				if(v==0) return 0;
+			}
+			double k;
+			for(int j=i+1;j<m.nR;j++)
+			{
+				k=(-1*m.values[j][i])/m.values[i][i];
+				for(int x=0;x<m.nC;x++)
+				{
+					m.values[j][x]=m.values[j][x]+(k*m.values[i][x]);
+				}
+			}
+		}
+
+		/*for(int i=1;i<m.nR;i++)
 		{
 			for(int j=0;j<i;j++)
 			{
@@ -229,7 +246,7 @@ double CMatrix::getDeterminant()
 				}
 
 			}
-		}
+		}*/
 		double det =1.0;
 		for (int u=0;u<m.nR;u++)
 		{
@@ -693,7 +710,7 @@ string CMatrix::getString()
 		for (int iC = 0; iC<nC; iC++)
 		{
 			char buffer[50];
-			snprintf(buffer,50, "%6.04f\t", values[iR][iC]);
+			snprintf(buffer,50, "%6.06f\t", values[iR][iC]);
 			s += buffer;
 		} s += "\n";
 	}

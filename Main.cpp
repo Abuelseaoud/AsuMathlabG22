@@ -229,7 +229,6 @@ void excute(string operation)
 					else
 					{
 						CMatrix result = Matrices[M1] / Matrices[M2];
-
 						if (M3 != -1)
 							Matrices[M3] = result;
 						else
@@ -356,6 +355,7 @@ cout<<endl<<endl<<endl;
 
 int main(int argc, char*argv[])
 {
+			
 	
 	
 		    try
