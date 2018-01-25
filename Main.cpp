@@ -136,11 +136,14 @@ int myfind(string& s, int pos)
 }
 
 ///////////////////////////////////////////////////Subtract the expression/////////////////////////////////////////
-int findOPs(string& s, int pos)        
+int findOPs(string& s, int pos)         // Amira's find function  
 {
 	for (int i = pos; i < s.length(); i++)
-	if (s[i] == '+' || s[i] == '-' || s[i] == '*' || s[i] == '/' || s[i] == '^' || (s[i] == 's' && s[i + 1] == 'i' && s[i + 2] == 'n') || (s[i] == 'c' && s[i + 1] == 'o' && s[i + 2] == 's') || (s[i] == 's' && s[i + 1] == 'q' && s[i + 2] == 'r' && s[i + 3] == 't'))
-		return i;
+	if (s[i] == '+' || s[i] == '-' || s[i] == '*' || s[i] == '/' || s[i] == '^' || (s[i] == 's' && s[i + 1] == 'i' && s[i + 2] == 'n') 
+		|| (s[i] == 'c' && s[i + 1] == 'o' && s[i + 2] == 's') || (s[i] == 't' && s[i + 1] == 'a' && s[i + 2] == 'n') 
+		|| (s[i] == 'l' && s[i + 1] == 'o' && s[i + 2] == 'g') || (s[i] == 'l' && s[i + 1] == 'n')
+		|| (s[i] == 's' && s[i + 1] == 'q' && s[i + 2] == 'r' && s[i + 3] == 't'))
+			return i;
 	return -1;
 }
 int findSpaceBefore(string& s, int pos)         
