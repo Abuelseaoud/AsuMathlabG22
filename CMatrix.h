@@ -87,6 +87,11 @@ public:
 	CMatrix elementDiv(double d =1.0);                                           /*return matrix of element division*/
 
 
+	//////////////////////////////////////////////////////////////////////////////////////////
+	void concatinate(CMatrix& m); 
+	string sendString();
+
+
 
 };
 
