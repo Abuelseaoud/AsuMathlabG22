@@ -1,7 +1,7 @@
 ﻿# ASU Math Lab
 
 ## Introduction        
-Mathematical library software. Similar to Matlab, Octave and similar tools
+Mathematical library software . Similar to Matlab, Octave and similar tools
 
 ## Specifications
 * Using C/C++
