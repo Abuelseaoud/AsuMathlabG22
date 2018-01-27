@@ -698,7 +698,6 @@ void CMatrix::copy(string s)
 		}
 		if (row.nC>0 && (row.nC == nC || nR == 0)) addRow(row);
 		line = strtok_r(NULL, lineSeparators, &lineContext);
-		if(row.nC != nC) throw("Invalid matrix dimension");
 	}
 	delete[] buffer;
 }
