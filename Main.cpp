@@ -237,6 +237,77 @@ string modify(string& s)
 
 }
 
+//////////////////////////////////////////////Parsing//////////////////////////////////////////////
+
+string parse(string &operation)
+{
+	string varName, s2,s;
+	int pos, flag=0, index;
+	CMatrix x;
+	if (operation.find("=") != -1)
+	{
+		varName = operation.substr(0, operation.find("="));
+		trimSpace(varName);
+		s2 = operation.substr(operation.find("=") + 1);
+		if (s2.find("\r\n") != -1) s2 = s2.replace(s2.find("\r\n"), 2, ";");
+
+		if (s2[s2.length() - 1] == ';')   // to know whether to print or not
+		{
+			flag = 1;
+			s2.erase(s2.length() - 1, 1);
+		}
+
+		trimend(s2);					//removing extra spaces and update string
+		advancedTrim(s2);
+		//updateString(s2); 
+
+
+		for (int i = 0; i <= NVar; i++)   //search if there's an existant matrix variable name (A or B etc.) in the string 
+		{
+			pos = s2.find(variableNames[i]);
+			while (pos != -1)
+			{
+				s2.replace(pos, varName.length(), Matrices[i].sendString());
+				pos = s2.find(variableNames[i]);
+			}
+		}
+
+		s2 = modify(s2);   // the string is in the standard format of matrix
+		x.copy(s2);
+		for (int i = 0; i <= NVar; i++)  //search if the variable before = exists or not in variableNames
+		{
+			if (variableNames[i] == varName)         //update the value of existant matrix
+				index = i;
+			else									//add new matrix to Matrices
+			{
+				index = NVar;
+				variableNames[index] = varName;
+				NVar++;
+				break;
+			}
+		}
+		Matrices[index] = x;
+		if (flag == 0){ cout << Matrices[index].getString(); } /*print the matrix when there is no semicolon in the end of the operation*/
+	}
+
+	//if just the Matrix name is written to be printed
+	else
+	{
+		varName = operation;
+		trimSpace(varName);
+		trimend(varName);
+		for (int i = 0; i <= NVar; i++)
+		{
+			if (variableNames[i] == varName)
+				cout << Matrices[i].getString() << endl;
+			//else throw("Error:you try to print undefined Matrix");
+		}
+	}
+
+	return Matrices[index].sendString();
+}
+
+
 
 /*
 int main(int argc, char*argv[])
