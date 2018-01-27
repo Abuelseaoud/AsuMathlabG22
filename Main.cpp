@@ -128,7 +128,7 @@ int myfind(string& s, int pos)
 	for (int i = pos; i < s.length(); i++)
 	{
 
-		if (s[i] == '+' || s[i] == '-' || s[i] == '*' || s[i] == '/' || s[i] == '^' || (s[i] == '.' && s[i + 1] == '+') || (s[i] == '.' && s[i + 1] == '-') || (s[i] == '.' && s[i + 1] == '*') || (s[i] == '.' && s[i + 1] == '/') || (s[i] == '.' && s[i + 1] == '^'))
+		if (s[i] == '+' || s[i] == '-' || s[i] == '*' || s[i] == '/' || s[i] == '^' || s[i] == '(' || s[i] == ')' || (s[i] == '.' && s[i + 1] == '+') || (s[i] == '.' && s[i + 1] == '-') || (s[i] == '.' && s[i + 1] == '*') || (s[i] == '.' && s[i + 1] == '/') || (s[i] == '.' && s[i + 1] == '^'))
 			return i;
 	}
 
@@ -136,7 +136,7 @@ int myfind(string& s, int pos)
 }
 
 ///////////////////////////////////////////////////Subtract the expression/////////////////////////////////////////
-int findOPs(string& s, int pos)         // Amira's find function  
+int findOPs(string& s, int pos)       
 {
 	for (int i = pos; i < s.length(); i++)
 	if (s[i] == '+' || s[i] == '-' || s[i] == '*' || s[i] == '/' || s[i] == '^' || (s[i] == 's' && s[i + 1] == 'i' && s[i + 2] == 'n') 
@@ -173,7 +173,7 @@ void updateString(string& s1)                /*replace the part to send to alaa 
 		pos2 = findSpaceAfter(s1, pos);
 		s = s1.substr(pos1 + 1, pos2 - pos1 - 1);
 		// Alaa's fn
-		s1 = s1.replace(pos1 + 1, pos2 - pos1 - 1, "Medhat"); // replace medhat with  alaa's fn .sendstring()
+		s1 = s1.replace(pos1 + 1, pos2 - pos1 - 1, "0.0"); // replace medhat with  alaa's fn .sendstring()
 		pos = findOPs(s1, 0);
 	}
 }
@@ -259,7 +259,7 @@ string parse(string &operation)
 
 		trimend(s2);					//removing extra spaces and update string
 		advancedTrim(s2);
-		//updateString(s2); 
+		updateString(s2);              //waiting for alaa's fn
 
 
 		for (int i = 0; i <= NVar; i++)   //search if there's an existant matrix variable name (A or B etc.) in the string 
@@ -300,7 +300,7 @@ string parse(string &operation)
 		{
 			if (variableNames[i] == varName)
 				cout << Matrices[i].getString() << endl;
-			//else throw("Error:you try to print undefined Matrix");
+			else throw("Error:you try to print undefined Matrix");
 		}
 	}
 
