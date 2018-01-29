@@ -87,9 +87,54 @@ public:
 	CMatrix elementDiv(double d =1.0);                                           /*return matrix of element division*/
 
 
+
 	//////////////////////////////////////////////////////////////////////////////////////////
 	void concatinate(CMatrix& m); 
 	string sendString();
+
+	/*/////////////////////////////////////////////////////////////////////////////////// trigonometric fns*/
+
+	friend CMatrix sin(CMatrix &m);                ///////////////////// sine matrix
+	friend CMatrix cos(CMatrix &m);                ///////////////////// cosine matrix
+	friend CMatrix tan(CMatrix &m);                ///////////////////// tan matrix
+	friend CMatrix sec(CMatrix &m);                ///////////////////// sec
+	friend CMatrix csc(CMatrix &m);                ///////////////////// cosec
+	friend CMatrix cot(CMatrix &m);                ///////////////////// cot 
+
+
+	friend CMatrix asin(CMatrix &m);               ///////////////////// asine matrix
+	friend CMatrix acos(CMatrix &m);               ///////////////////// asine matrix
+	friend CMatrix atan(CMatrix &m);               ///////////////////// asine matrix
+	friend CMatrix asec(CMatrix &m);               ///////////////////// asec matrix
+	friend CMatrix acsc(CMatrix &m);               ///////////////////// acosec matrix
+	friend CMatrix acot(CMatrix &m);               ///////////////////// acot matrix
+
+	friend CMatrix sinh(CMatrix &m);               ///////////////////// sinh matrix
+	friend CMatrix cosh(CMatrix &m);               ///////////////////// cosh matrix
+	friend CMatrix tanh(CMatrix &m);               ///////////////////// tanh matrix
+	friend CMatrix csch(CMatrix &m);               ///////////////////// sinh matrix
+	friend CMatrix sech(CMatrix &m);               ///////////////////// cosh matrix
+	friend CMatrix coth(CMatrix &m);               ///////////////////// tanh matrix
+
+
+
+	//////////////////////////////////////////////////////////////////////////////////// Roots
+
+	friend CMatrix sqrt(CMatrix &m);               /////// sqrt matrix
+
+	//////////////////////////////////////////////////////////////////////////////////// Powers
+
+	CMatrix powElement(double p) ;                 /////////////////// power each element
+	CMatrix pow_1x1_matrix(double p) ;             /////////////////// fraction power for 1x1 matrix
+	CMatrix pow_matrix(int p) ;                    /////////////////// power for matrix
+	
+	
+	//////////////////////////////////////////////////////////////////////////////////// Logarithmic
+
+	friend CMatrix log(CMatrix &m);               /////// log matrix
+	friend CMatrix ln(CMatrix &m);                /////// ln matrix
+	friend CMatrix exp(CMatrix &m);               /////// exp matrix
+
 
 
 
