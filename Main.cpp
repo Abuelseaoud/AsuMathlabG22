@@ -1,11 +1,7 @@
+#include "CMatrix.h"
 #include <iostream>
 #include <string>
 #include <cstring>
-#include <stdio.h>     
-#include <stdarg.h>
-#include <algorithm>
-#include "CMatrix.h"
-
 #include <string.h>
 #include <stdlib.h>
 #include <fstream>
@@ -17,12 +13,7 @@
 #include <ctgmath>
 using namespace std;
 
-
-using namespace std;
 //global variables 
-
-
-
 int NVar = 0;
 int tempNVar = 0;
 //array of varibles names
@@ -41,55 +32,77 @@ const string functionsname []={ "sinh",	"cosh",	"tanh","coth","sech","csch",
 
 void trimend(string & x)
 {
-	for (int i = x.length() - 1; i>0; i--)
+	for (int i = x.length() - 1; i<0; i--)
 	{
 		if (x[i] == ' ')
 		{
 			x.erase(i, 1);
+
 			i--;
 		}
 		else
-			break;
-	}
-}
-void trimbegin(string & x)
-{
-	for (int i = 0; i<x.length() - 1; i++)
-	{
-		if (x[i] == ' ')
 		{
-			x.erase(i, 1);
-			i--;
-		}
-		else
 			break;
+
+		}
 	}
 }
+
 void trimSpace(string & x)
 {
 	for (int i = 0; i<x.length(); i++)
+
 	{
 		if (x[i] == ' ')
 		{
 			x.erase(i, 1);
+
 			i--;
 		}
+
 	}
+
+
+
 }
+void trimline(string & x)
+{
+	for (int i = 0; i<x.length(); i++)
+
+	{
+		if (x[i] == '\n' || (int)x[i]==13)
+		{
+			x.erase(i, 1);
+
+			i--;
+		}
+
+	}
+
+
+
+}
+
 
 /*  get varible index from  the array   */
 int index(string varName, const string * varibleNames, int NVar)
 {
 
 	for (int i = 0; i < NVar; i++)
-
 	{
-		if (varName == variableNames[i])
+
+
+		if (varName == varibleNames[i])
 		{
+
+
+
 			return i;
 		}
+
 	}
 	return (-1);
+
 }
 
 // Function to get weight of an operator. An operator with higher weight will have higher precedence.
@@ -244,7 +257,7 @@ while(!post.empty())
 }
 
 
-
+int L=0;
 while(!ex.empty())
 {
 	string top=ex.top();
@@ -291,8 +304,8 @@ while(!ex.empty())
         else if(top[0]=='/')
         {
         	
-        	if(A.getn()==1) result.top()=result.top()*(1.0/A(0,0));
-        	else if(result.top().getn()==1) result.top()=A.elementDiv(result.top()(0,0));
+        	if(A.getn()==1){ result.top()=result.top()*(1.0/A(0,0)); if(A(0,0)==0) L=1;} 
+        	else if(result.top().getn()==1) {result.top()=A.elementDiv(result.top()(0,0)); if (result.top()(0,0)==0)L=1;}
         	else	{
         		              if(top.length()==1)result.top()=result.top()/A;
         		              else
@@ -328,7 +341,7 @@ while(!ex.empty())
         	else result.top()=result.top().pow_matrix(A(0,0));
        	    }
        	    else{
-                    if(A.getnR()!=result.top().getnR() ||A.getnC()!=result.top().getnC()) throw("error  Invalid Matrices Dim");
+                    if(A.getnR()!=result.top().getnR() ||A.getnC()!=result.top().getnC()) throw("error:  Invalid Matrices Dim");
                     else
                     {
 
@@ -386,7 +399,7 @@ while(!ex.empty())
     ex.pop();
 
 }
-
+if(L==1)cout<<"warning: you want to divide to zero "<<endl;
 
 return result.top();
 
@@ -575,6 +588,8 @@ CMatrix functionExe(int i,CMatrix &m,int r=0,int c=0)
 CMatrix Execution(string s )
 {
 
+    trimSpace(s);
+	trimline(s);
 	for (int x=0;x<26;x++)
 	{
     		while(s.find(functionsname[x])!=-1)
@@ -670,43 +685,31 @@ void errordetection(string &s)
 			{
                        s.erase(i+1,1);
 			}
-			else if(s[i+1]=='-')
+			else if(s[i+1]=='-' && s[i]!='^')
 
 			{
-				    int counter =0;
-				    s.replace(i+1,1,"(-1*");
-                     cout<<i+5<<endl;
-                     cout<<s.length()<<endl;
+				    /*int num =0;
+				    s.replace(i+1,1,"0-1*");
+				    
                      int j=i+5;
                      int q=s.length();
 				    for( ; j<q ;j++)
 				    	{
 				    		
-				    		if(Isoperator(s[j]) && counter==0)  { char w =s[j]; s.replace(j,1,")"+w); break;}
-				    	    else if (s[j]=='(') counter++;
-				    	    else if (s[j]==')') counter--;
+				    		if(Isoperator(s[j]) && num==0)  { char w =s[j]; s.replace(j,1,")"+w); break;}
+				    	    else if (s[j]=='(') num++;
+				    	    else if (s[j]==')') num--;
 				    	    if(j==(s.length()-1)) s=s+")"; 
 				    	}	
-                     cout<<s<<endl;
-                      // throw("error: please use () ");
+                     */
+                       throw("error: please use () around negative value ");
 			}
 			else{
 
 
 					throw("error:invalid expression");
 				}
-
-	
-
-
-
-
-
-
-
-
-
-
+		}
 
 
 		if(s[i]=='(')
@@ -721,16 +724,23 @@ void errordetection(string &s)
 		}
 
 	}
-	if(counter) throw("error:invalid expression");
+	if(s[s.length()-1]==')') counter--;
+	if(counter!=0) throw("error:invalid expression");
 }
 
 void  operationHandling (string s)
 {
+
 	trimSpace(s);
+	trimline(s);
 	if(s.length()==0) return;
-    errordetection(s);
 	int printFlag=1;
-	if(s[s.length()-1]==';'){printFlag=0; s.erase(s.length()-1);}
+	if(s.find(";")!=-1){printFlag=0; s.erase(s.find(";"));}
+    
+    errordetection(s);
+	
+	
+
 	if(s.find("=")==-1)
 	{
 			if(printFlag==0)return;
@@ -787,8 +797,185 @@ void  operationHandling (string s)
 		tempNVar=0;
 	}
 }
-  
-  
+//////////////////////////////////////////////////medhat amira aya/////////////////////////////////////////////////////////////////////////////////////
+
+
+string modify(string& s);
+void parse(string &s);
+int findOPs(string& s, int pos);
+int findSpaceBefore(string& s, int pos);
+int findSpaceAfter(string& s, int pos);
+string getElement(string s1);
+void updateString(string& s1);
+void trim(string& text);
+int myfind(string& s, int pos);
+void advancedTrim(string& s);
+string advancedConcatination(string& s);
+void trimbegin(string & x);
+
+
+
+
+
+
+int main(int argc, char*argv[])
+{
+
+	
+	 
+	
+	
+				string op;
+
+				if (argc == 1)
+				{
+					
+					while (1)
+					{
+						try{
+								cout<<">>";
+								getline(cin, op);
+								int m;
+								m = op.find("[");
+								if (m!=-1)
+								{
+									int h=0;
+										for (int i=0;i<(op.length()) ;i++)
+									    {
+										   if(op[i]=='[') {h++;}
+										   if(op[i]==']') {h--;}
+									    }
+
+
+									while (1)
+									{
+										
+										if (h!=0)
+										{
+											string temp;
+											getline(cin, temp);
+											if(temp.length()!=0)
+											{
+												if(op[op.length()-1]=='\n') op = op + temp;
+											    else op=op+"\r\n"+temp;
+											
+											    for (int i=0;i<(temp.length()) ;i++)
+									                {
+										                    if(temp[i]=='[') h++;
+										                    if(temp[i]==']') h--;
+									                }
+									        }
+
+										}
+										else
+										{
+											break;
+										}
+
+
+									}
+
+									parse(op);
+										
+								}
+                                    
+							    else  operationHandling(op);
+
+								
+
+
+							}
+							catch( const char * error)
+								{
+									cout<< error<<endl;
+								}
+
+					}
+
+				}
+				else
+				{
+					ifstream infile(argv[1]);
+					while (!infile.eof())
+					{
+
+						try 
+						{
+							getline(infile, op);
+						    int m;
+						    m = op.find("[");
+						    if (m!=-1)
+						       {
+						       	    int h=0;
+						       	    for (int i=0;i<(op.length()) ;i++)
+									    {
+										   if(op[i]=='[') h++;
+										   if(op[i]==']')h--;
+									    }
+
+							        while (1)
+							         {
+							         	
+								        
+								        if (h!=0)
+								          {
+									         string temp;
+									         getline(infile, temp);
+									         if(temp.length()!=0)
+											{
+												if(op[op.length()-1]=='\n') op = op + temp;
+											    else op=op+"\r\n"+temp;
+											
+											    for (int i=0;i<(temp.length()) ;i++)
+									                {
+										                    if(temp[i]=='[') h++;
+										                    if(temp[i]==']') h--;
+									                }
+									        }
+									         
+								          }
+								        else break;								
+							         }
+                                     for(int i=0;i<op.length();i++) if((int)op[i]==13){op.erase(i,1);i--;}
+							         parse(op); 
+						        }
+
+						    else operationHandling(op);
+
+
+						}
+						catch( const char * error)
+						{
+									cout<< error<<endl;
+						}
+
+						
+
+
+					}
+				}
+				
+			
+
+			
+		
+
+	delete[] varibleNames;
+	delete[] Matrices;
+	delete[] tempMatrices;
+
+
+
+
+
+
+
+}
+
+
+
+
+
 //////////////////////////////////////////////////////////Matrix parsing/////////////////////////  
   
   void advancedTrim(string& s)
@@ -813,10 +1000,13 @@ void updateString(string& s1)                /*replace the part to send to alaa 
 		pos1 = findSpaceBefore(s1, pos);
 		pos2 = findSpaceAfter(s1, pos);
 		s = s1.substr(pos1 + 1, pos2 - pos1 - 1);
-		// Alaa's fn
-		s1 = s1.replace(pos1 + 1, pos2 - pos1 - 1, "0.001"); // replace medhat with  alaa's fn .sendstring()
+		CMatrix g=Execution(s);
+		if(g.getn()==1) {s=g.sendString(); s.erase(s.find("["),1);s.erase(s.find("]"),1);}
+		else s=s=g.sendString();
+		s1 = s1.replace(pos1 + 1, pos2 - pos1 - 1, s); 
 		pos = findOPs(s1, 0);
 	}
+	
 }
 
 void trim(string& text)      //////////trimming spaces around operations//////////
@@ -885,10 +1075,10 @@ int findSpaceAfter(string& s, int pos)         // find the end of operation
 		return i;
 	return -1;
 }
-string parse(string &operation)             /////take the string and return it in the form of phase 1
+void parse(string &operation)             /////take the string and return it in the form of phase 1
 {
 	string varName, s2, s;
-	int pos, flag = 0, index;
+	int pos, flag = 0;
 	CMatrix x;
 	if (operation.find("=") != -1)
 	{
@@ -911,31 +1101,29 @@ string parse(string &operation)             /////take the string and return it i
 
 		for (int i = 0; i < NVar; i++)   //search if there's an existant matrix variable name (A or B etc.) in the string 
 		{
-			pos = s2.find(variableNames[i]);
+			pos = s2.find(varibleNames[i]);
 			while (pos != -1)
 			{
 				s2.replace(pos, varName.length(), Matrices[i].sendString());
-				pos = s2.find(variableNames[i]);
+				pos = s2.find(varibleNames[i]);
 			}
 		}
-
+        
 		s2 = advancedConcatination(s2);   // the string is in the standard format of matrix
+		
 		x.copy(s2);
-
-		for (int i = 0; i <= NVar; i++)  //search if the variable before = exists or not in variableNames
+         
+		if(index(varName,varibleNames,NVar)!=-1)
 		{
-			if (variableNames[i] == varName)         //update the value of existant matrix
-				index = i;
-			else									//add new matrix to Matrices
-			{
-				index = NVar;
-				variableNames[index] = varName;
-				NVar++;
-				break;
-			}
+			Matrices[index(varName,varibleNames,NVar)]=x;
 		}
-		Matrices[index] = x;
-		if (flag == 0){ cout << Matrices[index].getString(); } /*print the matrix when there is no semicolon in the end of the operation*/
+		else 
+		{
+             Matrices[NVar]=x;
+             varibleNames[NVar]=varName;
+             NVar++;
+		}
+		if (flag == 0){ cout << varName<<" ="<<endl<<x<<endl; } /*print the matrix when there is no semicolon in the end of the operation*/
 	}
 
 	//if just the Matrix name is written to be printed
@@ -946,13 +1134,13 @@ string parse(string &operation)             /////take the string and return it i
 		trimend(varName);
 		for (int i = 0; i <= NVar; i++)
 		{
-			if (variableNames[i] == varName)
+			if (varibleNames[i] == varName)
 				cout << Matrices[i].getString() << endl;
 			else throw("Error:you try to print undefined Matrix");
 		}
 	}
 
-	return Matrices[index].sendString();
+	
 }
 
 string modify(string& s)
@@ -1009,9 +1197,9 @@ string modify(string& s)
 
 }
 
-string advancedConcatination(string s)  // s= [[1.2 2.3; 1 2.3; [1.3 2.4;4.6 1.3]],[3.2 1;-7.8 2;-3.2 3; 1.2 4]]
+string advancedConcatination(string &s)  // s= [[1.2 2.3; 1 2.3; [1.3 2.4;4.6 1.3]],[3.2 1;-7.8 2;-3.2 3; 1.2 4]]
 {
-	int i, j, k;
+	int i, j, k, l;
 	string s1, s2;
 	CMatrix A;
 	i = s.find("] [");
@@ -1039,6 +1227,7 @@ string advancedConcatination(string s)  // s= [[1.2 2.3; 1 2.3; [1.3 2.4;4.6 1.3
 	}
 	i = s.rfind("],[");
 	s1 = s.substr(i + 3);
+	l = s1.length();
 	j = s1.rfind('[');
 	k = s1.find(']', j);
 	while (j != -1 && k != -1)
@@ -1048,126 +1237,27 @@ string advancedConcatination(string s)  // s= [[1.2 2.3; 1 2.3; [1.3 2.4;4.6 1.3
 		j = s1.rfind('[');
 		k = s1.find(']', j);
 	}
-	s.replace(i + 3, s1.length() + 1, s1);
+	s.replace(i + 3, l+3, s1);
 
 	s2 = modify(s);
 	A.copy(s2);
 	return A.sendString();
 }
 
-  
+
+  void trimbegin(string & x)
+{
+	for (int i = 0; i<x.length() - 1; i++)
+	{
+		if (x[i] == ' ')
+		{
+			x.erase(i, 1);
+			i--;
+		}
+		else
+			break;
+	}
+}
   
   
   /////////////////////////////////end of Matrix Parsing ////////////////////////////////////////////
-	
-	
-	
-int main(int argc, char*argv[])
-{
-
-	
-	 
-	
-	
-				string op;
-
-				if (argc == 1)
-				{
-					
-					while (1)
-					{
-						try{
-								cout<<">>";
-								getline(cin, op);
-								int m;
-								m = op.find("[");
-								if (m>=0 && m<op.length())
-								{
-									while (1)
-									{
-										m = op.find("]");
-										if (m<0 || m >= op.length())
-										{
-											string temp;
-											getline(cin, temp);
-											op = op + temp;
-										}
-										else
-										{
-											break;
-										}
-									}
-								}
-                                    
-								if(op.find("[")==-1) operationHandling(op);
-
-								else ;
-
-
-							}
-							catch( const char * error)
-								{
-									cout<< error<<endl;
-								}
-
-					}
-
-				}
-				else
-				{
-					ifstream infile(argv[1]);
-					while (!infile.eof())
-					{
-
-						getline(infile, op);
-						int m;
-						m = op.find("[");
-						if (m>=0 && m<op.length())
-						{
-							while (1)
-							{
-								m = op.find("]");
-								if (m<0 || m >= op.length())
-								{
-									string temp;
-									getline(infile, temp);
-									op = op + temp;
-								}
-								else
-								{
-									break;
-								}
-							}
-						}
-
-						if(op.find("[")==-1) 
-								{
-									try{operationHandling(op);}
-									catch( const char * error)
-									{
-										cout<< error<<endl;
-									}
-								}	
-						else ;
-
-
-					}
-				}
-				
-			
-
-			
-		
-
-	delete[] varibleNames;
-	delete[] Matrices;
-	delete[] tempMatrices;
-
-
-
-
-
-
-
-}
-
