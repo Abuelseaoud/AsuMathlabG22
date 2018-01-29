@@ -345,7 +345,6 @@ string advancedConcatination(string s)  // s= [[1.2 2.3; 1 2.3; [1.3 2.4;4.6 1.3
 		j = s1.rfind('[');
 		//if (j < 0) throw ("Error: invalid Matrix");
 		k = s1.find(']', j);
-		//if (k < 0) throw ("Error: invalid Matrix");
 		while (j != -1 && k != -1)
 		{
 			s1.erase(k, 1);
