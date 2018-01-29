@@ -1,85 +1,61 @@
-#include "CMatrix.h"
 #include <iostream>
 #include <string>
 #include <cstring>
-#include <string.h>
-#include <stdlib.h>
-#include <fstream>
-#include <cstdio>
-#include <exception>
-using namespace std;
+#include <stdio.h>     
+#include <stdarg.h>
+#include <algorithm>
+#include "CMatrix.h"
 
+using namespace std;
 //global variables 
 string varName, Matrix1, Matrix2, Matrix3;
-char Operator;
 int NVar = 0;
-int MA,MB;
+int MA, MB;
 //array of varibles names
-string * varibleNames = new string[30];
+string * variableNames = new string[30];
 //array of Matrices
 CMatrix * Matrices = new CMatrix[30];
 
 
-void trimend(string & x)
-{
-	for (int i = x.length() - 1; i<0; i--)
-	{
-		if (x[i] == ' ')
-		{
-			x.erase(i, 1);
+string modify(string& s);
+void trimend(string & x);
+void trimbegin(string & x);
+void trimSpace(string & x);
+int index(string varName, string * variableNames, int NVar);
+string parse(string &s);
+int findOPs(string& s, int pos);
+int findSpaceBefore(string& s, int pos);
+int findSpaceAfter(string& s, int pos);
+string getElement(string s1);
+void updateString(string& s1);
+void trim(string& text);
+int myfind(string& s, int pos);
+void advancedTrim(string& s);
+string advancedConcatination(string s);
 
-			i--;
-		}
-		else
-		{
-			break;
+int main(){
 
-		}
-	}
-}
-
-void trimSpace(string & x)
-{
-	for (int i = 0; i<x.length(); i++)
-
-	{
-		if (x[i] == ' ')
-		{
-			x.erase(i, 1);
-
-			i--;
-		}
-
-	}
+	string s2 = "A = 5;";
+	string ss = "B = [1.2 2.3 A;[1.3 2.4;4.6 1.3],[3.2;7.8]];";
+	string s = "C = [[B [3.4; 2.1; 3.5+9.1]]\r\n 1.2^3 3+1.2 15/(2.1+10*sin(0.12))  1.2]";
+	string s3 ="D =[[3.2;-7.8;-3.2; 1.2],[1.2 2.3; 1 2.3; [1.3 2.4;4.6 1.3]]]";
+	string s5 = "A = [8.9 7.3 4.8 2.4 2.3 6.5 8.9 1.2 4.9 3.8 7.2 7.5 9.8 3.4 7.5 8.9 8.9 7.3 4.8 2.4 2.3 6.5 8.9 1.2 4.9 3.8 7.2 7.5 9.8 3.4 7.5 8.9; 8.9 7.3 4.8 2.4 2.3 6.5 8.9 1.2 4.9 3.8 7.2 7.5 9.8 3.4 7.5 8.9 8.9 7.3 4.8 2.4 2.3 6.5 8.9 1.2 4.9 3.8 7.2 7.5 9.8 3.4 7.5 8.9; 8.9 7.3 4.8 2.4 2.3 6.5 8.9 1.2 4.9 3.8 7.2 7.5 9.8 3.4 7.5 8.9 8.9 7.3 4.8 2.4 2.3 6.5 8.9 1.2 4.9 3.8 7.2 7.5 9.8 3.4 7.5 8.9; 8.9 7.3 4.8 2.4 2.3 6.5 8.9 1.2 4.9 3.8 7.2 7.5 9.8 3.4 7.5 8.9 8.9 7.3 4.8 2.4 2.3 6.5 8.9 1.2 4.9 3.8 7.2 7.5 9.8 3.4 7.5 8.9; 8.9 7.3 4.8 2.4 2.3 6.5 8.9 1.2 4.9 3.8 7.2 7.5 9.8 3.4 7.5 8.9 8.9 7.3 4.8 2.4 2.3 6.5 8.9 1.2 4.9 3.8 7.2 7.5 9.8 3.4 7.5 8.9; 8.9 7.3 4.8 2.4 2.3 6.5 8.9 1.2 4.9 3.8 7.2 7.5 9.8 3.4 7.5 8.9 8.9 7.3 4.8 2.4 2.3 6.5 8.9 1.2 4.9 3.8 7.2 7.5 9.8 3.4 7.5 8.9; 8.9 7.3 4.8 2.4 2.3 6.5 8.9 1.2 4.9 3.8 7.2 7.5 9.8 3.4 7.5 8.9 8.9 7.3 4.8 2.4 2.3 6.5 8.9 1.2 4.9 3.8 7.2 7.5 9.8 3.4 7.5 8.9; 8.9 7.3 4.8 2.4 2.3 6.5 8.9 1.2 4.9 3.8 7.2 7.5 9.8 3.4 7.5 8.9 8.9 7.3 4.8 2.4 2.3 6.5 8.9 1.2 4.9 3.8 7.2 7.5 9.8 3.4 7.5 8.9; 8.9 7.3 4.8 2.4 2.3 6.5 8.9 1.2 4.9 3.8 7.2 7.5 9.8 3.4 7.5 8.9 8.9 7.3 4.8 2.4 2.3 6.5 8.9 1.2 4.9 3.8 7.2 7.5 9.8 3.4 7.5 8.9; 8.9 7.3 4.8 2.4 2.3 6.5 8.9 1.2 4.9 3.8 7.2 7.5 9.8 3.4 7.5 8.9 8.9 7.3 4.8 2.4 2.3 6.5 8.9 1.2 4.9 3.8 7.2 7.5 9.8 3.4 7.5 8.9; 8.9 7.3 4.8 2.4 2.3 6.5 8.9 1.2 4.9 3.8 7.2 7.5 9.8 3.4 7.5 8.9 8.9 7.3 4.8 2.4 2.3 6.5 8.9 1.2 4.9 3.8 7.2 7.5 9.8 3.4 7.5 8.9; 8.9 7.3 4.8 2.4 2.3 6.5 8.9 1.2 4.9 3.8 7.2 7.5 9.8 3.4 7.5 8.9 8.9 7.3 4.8 2.4 2.3 6.5 8.9 1.2 4.9 3.8 7.2 7.5 9.8 3.4 7.5 8.9; 8.9 7.3 4.8 2.4 2.3 6.5 8.9 1.2 4.9 3.8 7.2 7.5 9.8 3.4 7.5 8.9 8.9 7.3 4.8 2.4 2.3 6.5 8.9 1.2 4.9 3.8 7.2 7.5 9.8 3.4 7.5 8.9; 8.9 7.3 4.8 2.4 2.3 6.5 8.9 1.2 4.9 3.8 7.2 7.5 9.8 3.4 7.5 8.9 8.9 7.3 4.8 2.4 2.3 6.5 8.9 1.2 4.9 3.8 7.2 7.5 9.8 3.4 7.5 8.9; 8.9 7.3 4.8 2.4 2.3 6.5 8.9 1.2 4.9 3.8 7.2 7.5 9.8 3.4 7.5 8.9 8.9 7.3 4.8 2.4 2.3 6.5 8.9 1.2 4.9 3.8 7.2 7.5 9.8 3.4 7.5 8.9; 8.9 7.3 4.8 2.4 2.3 6.5 8.9 1.2 4.9 3.8 7.2 7.5 9.8 3.4 7.5 8.9 8.9 7.3 4.8 2.4 2.3 6.5 8.9 1.2 4.9 3.8 7.2 7.5 9.8 3.4 7.5 8.9; 8.9 7.3 4.8 2.4 2.3 6.5 8.9 1.2 4.9 3.8 7.2 7.5 9.8 3.4 7.5 8.9 8.9 7.3 4.8 2.4 2.3 6.5 8.9 1.2 4.9 3.8 7.2 7.5 9.8 3.4 7.5 8.9; 8.9 7.3 4.8 2.4 2.3 6.5 8.9 1.2 4.9 3.8 7.2 7.5 9.8 3.4 7.5 8.9 8.9 7.3 4.8 2.4 2.3 6.5 8.9 1.2 4.9 3.8 7.2 7.5 9.8 3.4 7.5 8.9; 8.9 7.3 4.8 2.4 2.3 6.5 8.9 1.2 4.9 3.8 7.2 7.5 9.8 3.4 7.5 8.9 8.9 7.3 4.8 2.4 2.3 6.5 8.9 1.2 4.9 3.8 7.2 7.5 9.8 3.4 7.5 8.9; 8.9 7.3 4.8 2.4 2.3 6.5 8.9 1.2 4.9 3.8 7.2 7.5 9.8 3.4 7.5 8.9 8.9 7.3 4.8 2.4 2.3 6.5 8.9 1.2 4.9 3.8 7.2 7.5 9.8 3.4 7.5 8.9; 8.9 7.3 4.8 2.4 2.3 6.5 8.9 1.2 4.9 3.8 7.2 7.5 9.8 3.4 7.5 8.9 8.9 7.3 4.8 2.4 2.3 6.5 8.9 1.2 4.9 3.8 7.2 7.5 9.8 3.4 7.5 8.9; 8.9 7.3 4.8 2.4 2.3 6.5 8.9 1.2 4.9 3.8 7.2 7.5 9.8 3.4 7.5 8.9 8.9 7.3 4.8 2.4 2.3 6.5 8.9 1.2 4.9 3.8 7.2 7.5 9.8 3.4 7.5 8.9; 8.9 7.3 4.8 2.4 2.3 6.5 8.9 1.2 4.9 3.8 7.2 7.5 9.8 3.4 7.5 8.9 8.9 7.3 4.8 2.4 2.3 6.5 8.9 1.2 4.9 3.8 7.2 7.5 9.8 3.4 7.5 8.9; 8.9 7.3 4.8 2.4 2.3 6.5 8.9 1.2 4.9 3.8 7.2 7.5 9.8 3.4 7.5 8.9 8.9 7.3 4.8 2.4 2.3 6.5 8.9 1.2 4.9 3.8 7.2 7.5 9.8 3.4 7.5 8.9; 8.9 7.3 4.8 2.4 2.3 6.5 8.9 1.2 4.9 3.8 7.2 7.5 9.8 3.4 7.5 8.9 8.9 7.3 4.8 2.4 2.3 6.5 8.9 1.2 4.9 3.8 7.2 7.5 9.8 3.4 7.5 8.9; 8.9 7.3 4.8 2.4 2.3 6.5 8.9 1.2 4.9 3.8 7.2 7.5 9.8 3.4 7.5 8.9 8.9 7.3 4.8 2.4 2.3 6.5 8.9 1.2 4.9 3.8 7.2 7.5 9.8 3.4 7.5 8.9; 8.9 7.3 4.8 2.4 2.3 6.5 8.9 1.2 4.9 3.8 7.2 7.5 9.8 3.4 7.5 8.9 8.9 7.3 4.8 2.4 2.3 6.5 8.9 1.2 4.9 3.8 7.2 7.5 9.8 3.4 7.5 8.9; 8.9 7.3 4.8 2.4 2.3 6.5 8.9 1.2 4.9 3.8 7.2 7.5 9.8 3.4 7.5 8.9 8.9 7.3 4.8 2.4 2.3 6.5 8.9 1.2 4.9 3.8 7.2 7.5 9.8 3.4 7.5 8.9; 8.9 7.3 4.8 2.4 2.3 6.5 8.9 1.2 4.9 3.8 7.2 7.5 9.8 3.4 7.5 8.9 8.9 7.3 4.8 2.4 2.3 6.5 8.9 1.2 4.9 3.8 7.2 7.5 9.8 3.4 7.5 8.9; 8.9 7.3 4.8 2.4 2.3 6.5 8.9 1.2 4.9 3.8 7.2 7.5 9.8 3.4 7.5 8.9 8.9 7.3 4.8 2.4 2.3 6.5 8.9 1.2 4.9 3.8 7.2 7.5 9.8 3.4 7.5 8.9; 8.9 7.3 4.8 2.4 2.3 6.5 8.9 1.2 4.9 3.8 7.2 7.5 9.8 3.4 7.5 8.9 8.9 7.3 4.8 2.4 2.3 6.5 8.9 1.2 4.9 3.8 7.2 7.5 9.8 3.4 7.5 8.9; 8.9 7.3 4.8 2.4 2.3 6.5 8.9 1.2 4.9 3.8 7.2 7.5 9.8 3.4 7.5 8.9 8.9 7.3 4.8 2.4 2.3 6.5 8.9 1.2 4.9 3.8 7.2 7.5 9.8 3.4 7.5 8.9];";
+	string s6 = "B = [1.2 3.4 5.6 7.8 1.0 3.2 2.1 2.3 1.4 2.6 2.7 2.2 3.4 5.6 7.8 9.0 2.2 2.1 2.3 2.4 2.6 3.7 1.2 3.4 5.6 7.8 9.0 1.2 2.1 2.3 2.4 1.6; 2.7 1.2 3.4 5.6 7.8 9.0 2.2 2.1 2.3 2.4 2.6 2.7 1.2 3.4 5.6 7.8 9.0 2.2 2.1 2.3 2.4 2.6 2.7 1.2 3.4 5.6 7.8 9.0 2.2 2.1 2.3 2.4; 2.6 2.7 1.2 3.4 5.6 7.8 9.0 2.2 2.1 7.3 2.4 2.6 2.7 1.2 3.4 5.6 7.8 9.0 2.2 2.1 2.3 2.4 2.6 2.7 1.2 3.4 5.6 7.8 9.0 2.2 4.1 2.3; 2.4 2.6 2.7 1.2 3.4 5.6 7.8 9.0 2.2 2.1 2.3 2.4 2.6 2.7 1.2 3.4 5.6 1.8 9.0 2.2 2.1 2.3 2.4 2.6 2.7 1.2 3.4 5.6 7.8 9.0 2.2 2.1; 2.3 2.4 2.6 2.7 1.2 3.4 5.6 7.8 9.0 2.2 2.1 2.3 2.4 2.6 2.7 1.2 3.4 5.6 7.8 9.0 2.2 2.1 2.3 2.4 2.6 2.7 1.2 3.4 5.6 7.8 9.0 2.2; 2.1 2.3 2.4 2.6 2.7 1.2 3.4 5.6 17.8 9.0 2.2 2.1 2.3 2.4 2.6 2.7 1.2 3.4 5.6 7.8 9.0 2.2 2.1 2.3 2.4 2.6 2.7 1.2 3.4 5.6 7.8 9.0; 2.2 2.1 2.3 2.4 2.6 2.7 1.2 3.4 5.6 7.8 9.0 2.2 2.1 2.3 2.4 2.6 2.7 1.2 3.4 5.6 7.8 9.0 2.2 2.1 2.3 2.4 2.6 2.7 1.2 3.4 5.6 7.8; 9.0 2.2 2.1 2.3 2.4 1.6 2.7 1.2 3.4 5.6 7.8 9.0 2.2 2.1 2.3 2.4 2.6 2.7 1.2 3.4 2.6 7.8 9.0 2.2 2.1 2.3 2.4 2.6 2.7 1.2 3.4 5.6; 7.4 9.0 2.2 2.1 2.3 2.4 2.6 2.7 1.2 3.4 5.6 7.8 9.0 2.2 2.1 2.3 2.4 2.6 2.7 1.2 3.4 5.6 7.8 9.0 2.2 2.1 2.3 2.4 2.6 2.7 1.2 3.4; 5.6 7.8 9.0 2.2 4.4 2.3 2.4 2.6 2.7 1.2 3.4 5.6 2.8 9.0 2.2 2.1 2.3 2.4 2.6 2.7 1.2 3.4 5.6 7.8 9.0 2.2 2.1 2.3 2.4 2.6 2.7 1.2; 3.4 5.6 7.8 9.0 2.2 2.1 2.3 2.4 2.6 2.7 1.2 3.4 5.6 1.8 9.0 1.2 2.1 2.3 2.4 8.6 2.7 1.2 3.4 5.6 7.8 9.0 2.2 2.1 2.3 2.4 2.6 2.7; 1.2 3.4 5.6 7.8 9.0 2.2 5.1 4.3 12.4 2.6 2.7 1.2 3.4 5.6 97.8 9.0 2.2 2.1 2.3 2.4 2.6 2.7 1.2 3.4 5.6 7.8 9.0 2.2 2.1 2.3 3.4 2.6; 2.7 1.2 3.4 5.6 7.5 9.0 2.2 2.1 3.3 2.4 2.6 2.7 1.2 3.4 5.6 7.8 9.0 2.2 5.1 2.3 2.4 5.6 2.7 1.2 3.4 5.6 7.8 9.0 2.2 2.1 2.3 2.4; 2.6 2.7 1.2 3.4 5.6 7.8 9.0 2.2 2.1 2.3 2.4 2.6 2.7 1.2 3.4 5.6 7.8 9.0 2.2 2.1 2.3 2.4 2.6 2.7 1.2 3.4 5.6 7.8 9.0 8.2 2.1 2.3; 2.4 2.6 2.7 1.2 3.4 5.6 7.8 9.0 2.2 2.1 2.3 2.4 2.6 2.7 1.2 3.4 5.6 7.8 9.0 2.2 2.1 2.3 2.4 6.6 2.7 1.2 3.4 5.6 2.8 9.0 1.2 2.1; 2.3 2.4 2.6 2.7 1.2 3.4 5.6 7.8 9.0 2.2 5.1 2.3 2.4 0.6 2.7 1.2 3.4 5.6 7.8 9.0 2.2 2.1 2.3 2.4 0.6 2.7 1.2 3.4 5.6 7.8 9.0 2.2; 0.1 2.3 2.4 2.6 2.7 1.2 3.4 5.6 7.8 9.0 2.2 2.1 2.3 2.4 2.6 2.7 1.2 3.4 5.6 7.8 9.0 2.2 2.1 2.3 2.4 2.6 2.7 1.2 3.4 5.6 7.8 9.0; 4.2 2.1 2.3 2.4 2.6 2.7 1.2 3.4 5.6 7.8 9.0 5.2 2.1 2.3 2.4 9.6 2.7 1.2 3.4 5.6 7.8 9.0 2.2 2.1 2.3 2.4 2.6 2.7 1.2 3.4 5.6 7.8; 9.0 2.2 2.1 2.3 2.4 2.6 2.7 1.2 3.4 5.6 7.8 9.0 5.3 2.1 2.3 2.4 2.6 2.7 1.2 3.4 5.6 7.8 9.0 2.2 2.1 2.3 2.4 2.6 2.7 1.2 3.4 5.3; 7.8 9.0 2.2 2.1 2.3 2.4 2.6 2.7 3.2 3.4 5.6 7.8 9.0 2.2 2.1 2.3 3.4 2.6 3.7 1.2 3.4 5.6 7.8 9.0 2.2 2.1 2.3 8.4 2.6 2.7 1.2 3.4; 5.6 7.8 9.0 2.2 2.1 2.3 3.4 2.6 2.7 1.2 3.4 5.6 7.8 9.0 2.2 2.1 1.3 2.4 2.6 2.7 1.2 3.4 5.6 7.8 9.0 2.2 2.1 2.3 2.4 2.6 2.7 1.2; 3.4 1.6 7.8 9.0 2.2 3.1 6.3 2.4 2.6 2.7 1.2 3.4 5.6 7.8 9.0 2.2 2.1 2.3 2.4 2.6 2.7 1.2 3.4 5.6 7.8 9.0 2.2 2.1 2.3 2.4 2.6 2.7; 1.2 3.4 5.6 7.8 9.0 2.2 2.1 2.3 2.4 2.6 2.7 1.2 3.4 5.6 7.8 9.0 2.2 4.1 2.3 2.4 2.6 2.7 1.2 3.4 5.6 7.8 9.0 2.2 2.1 2.3 2.4 1.6; 2.7 1.2 3.4 5.6 7.8 9.0 2.2 2.1 2.3 2.4 2.6 2.7 1.2 3.4 5.6 7.8 9.0 2.2 2.1 2.3 1.4 2.6 2.7 1.2 3.4 9.6 7.8 9.0 2.2 2.1 2.3 2.4; 2.6 2.7 1.2 3.4 5.6 7.8 9.0 2.2 2.1 2.3 2.4 2.6 2.7 1.2 3.4 5.6 7.8 9.0 2.2 2.1 2.3 1.4 2.6 2.7 2.2 3.4 5.6 7.8 9.0 2.2 2.1 2.3; 2.4 2.6 2.7 1.2 3.4 5.6 7.8 1.0 2.2 2.1 2.3 2.4 2.6 2.7 1.2 3.4 8.6 7.8 9.0 2.2 2.1 2.3 2.4 2.6 2.7 1.2 3.4 2.6 7.8 9.0 2.2 2.1; 7.3 2.4 2.6 2.7 1.2 3.4 5.6 7.8 9.0 2.2 2.1 2.3 2.4 3.6 1.7 1.2 3.4 5.6 7.8 9.0 2.2 2.1 2.3 2.4 2.6 2.7 1.2 3.4 5.6 7.8 9.0 2.2; 2.1 2.3 2.4 2.6 2.7 1.2 3.4 5.6 7.8 9.0 2.2 2.1 2.3 2.4 2.6 2.7 1.2 3.4 5.6 7.8 9.0 2.2 2.1 2.3 2.4 2.6 2.7 7.2 3.4 5.6 7.8 9.0; 2.2 2.1 2.3 2.4 2.6 7.7 9.2 3.4 5.6 7.8 9.0 2.2 2.1 2.3 2.4 2.6 2.7 1.2 3.4 5.6 7.8 9.0 2.2 2.1 2.9 2.4 2.6 2.7 1.2 3.4 5.6 7.8; 9.0 2.2 2.1 2.3 2.4 2.6 7.7 1.2 3.4 5.6 7.8 9.0 2.2 2.1 2.3 2.4 2.6 2.7 1.2 3.4 5.6 7.8 9.0 2.2 2.1 2.3 2.4 2.6 2.7 1.2 3.4 5.6; 7.8 9.0 2.2 2.1 2.3 2.4 2.6 2.7 1.2 3.4 5.6 7.8 9.0 2.2 2.1 2.3 2.4 2.6 2.7 1.2 3.4 5.6 7.8 9.0 2.2 2.1 2.3 2.4 2.6 2.7 1.2 3.4; 5.6 7.8 9.0 2.2 2.1 2.3 2.4 2.6 2.7 1.2 3.4 5.6 7.8 9.0 2.2 2.1 2.3 2.4 2.6 5.7 9.3 3.4 5.6 3.8 9.0 2.2 5.1 2.3 2.4 2.6 2.7 1.2];";
 
 
-
-}
-
-
-
-/*  get varible index from  the array   */
-int index(string varName, string * varibleNames, int NVar)
-{
-
-	for (int i = 0; i <= NVar; i++)
-	{
-
-
-		if (varName == varibleNames[i])
-		{
-
-
-
-			return i;
-		}
+	try{
+		
+		cout << parse(s5) << endl;
+		cout << parse(s6) << endl;
 
 	}
-	return (-1);
-
+	catch (char* error)
+	{
+		cout << error << endl;
+	}
+	delete[] variableNames;
+	delete[] Matrices;
 }
-
-///////////////////////////////////////////remove duplicated spaces //////////////////////////////////////////////////////////
 
 void advancedTrim(string& s)
 {
@@ -89,11 +65,26 @@ void advancedTrim(string& s)
 		{
 			s.erase(i, 1);
 			i--;
-		}	
+		}
 	}
 }
 
-///////////////////////////////////////////Trim spaces before and after operations//////////////////////////////////////
+void updateString(string& s1)                /*replace the part to send to alaa */
+{
+	string s;
+	trim(s1);
+	int pos = findOPs(s1, 0), pos1, pos2;
+	while (pos != -1)
+	{
+		pos1 = findSpaceBefore(s1, pos);
+		pos2 = findSpaceAfter(s1, pos);
+		s = s1.substr(pos1 + 1, pos2 - pos1 - 1);
+		// Alaa's fn
+		s1 = s1.replace(pos1 + 1, pos2 - pos1 - 1, "0.001"); // replace medhat with  alaa's fn .sendstring()
+		pos = findOPs(s1, 0);
+	}
+}
+
 void trim(string& text)
 {
 	int n, startpos = 0;
@@ -128,59 +119,158 @@ int myfind(string& s, int pos)
 	for (int i = pos; i < s.length(); i++)
 	{
 
-		if (s[i] == '+' || s[i] == '-' || s[i] == '*' || s[i] == '/' || s[i] == '^' || s[i] == '(' || s[i] == ')' || (s[i] == '.' && s[i + 1] == '+') || (s[i] == '.' && s[i + 1] == '-') || (s[i] == '.' && s[i + 1] == '*') || (s[i] == '.' && s[i + 1] == '/') || (s[i] == '.' && s[i + 1] == '^'))
+		if (s[i] == '+' || s[i] == '-' || s[i] == '*' || s[i] == '/' || s[i] == '^' || s[i] == ';' || s[i] == ','
+			|| (s[i] == '.' && s[i + 1] == '+') || (s[i] == '.' && s[i + 1] == '-') || (s[i] == '.' && s[i + 1] == '*')
+			|| (s[i] == '.' && s[i + 1] == '/') || (s[i] == '.' && s[i + 1] == '^'))
 			return i;
 	}
 
 	return -1;
 }
-
-///////////////////////////////////////////////////Subtract the expression/////////////////////////////////////////
-int findOPs(string& s, int pos)       
+int findOPs(string& s, int pos)         // Amira's find function  
 {
 	for (int i = pos; i < s.length(); i++)
-	if (s[i] == '+' || s[i] == '-' || s[i] == '*' || s[i] == '/' || s[i] == '^' || (s[i] == 's' && s[i + 1] == 'i' && s[i + 2] == 'n') 
-		|| (s[i] == 'c' && s[i + 1] == 'o' && s[i + 2] == 's') || (s[i] == 't' && s[i + 1] == 'a' && s[i + 2] == 'n') 
+	if (s[i] == '+' || s[i] == '-' || s[i] == '*' || s[i] == '/' || s[i] == '^' || (s[i] == 's' && s[i + 1] == 'i' && s[i + 2] == 'n')
+		|| (s[i] == 'c' && s[i + 1] == 'o' && s[i + 2] == 's') || (s[i] == 't' && s[i + 1] == 'a' && s[i + 2] == 'n')
 		|| (s[i] == 'l' && s[i + 1] == 'o' && s[i + 2] == 'g') || (s[i] == 'l' && s[i + 1] == 'n')
-		|| (s[i] == 's' && s[i + 1] == 'q' && s[i + 2] == 'r' && s[i + 3] == 't')
-	   	|| (s[i] == 'c' && s[i + 1] == 'o' && s[i + 2] == 't') || (s[i] == 's' && s[i + 1] == 'e' && s[i + 2] == 'c')
-	    	|| (s[i] == 'c' && s[i + 1] == 's' && s[i + 2] == 'c') || (s[i] == 'e' && s[i + 1] == 'x' && s[i + 2] == 'p'))
-			return i;
+		|| (s[i] == 's' && s[i + 1] == 'q' && s[i + 2] == 'r' && s[i + 3] == 't'))
+		return i;
 	return -1;
 }
-int findSpaceBefore(string& s, int pos)         
+int findSpaceBefore(string& s, int pos)         // Amira's find function  
 {
 	for (int i = pos; i >= 0; i--)
 	if (s[i] == ' ' || s[i] == '[' || s[i] == ']' || s[i] == ';')
 		return i;
 	return -1;
 }
-int findSpaceAfter(string& s, int pos)         
+int findSpaceAfter(string& s, int pos)         // Amira's find function  
 {
 	for (int i = pos; i < s.length(); i++)
 	if (s[i] == ' ' || s[i] == '[' || s[i] == ']' || s[i] == ';')
 		return i;
 	return -1;
 }
-void updateString(string& s1)                /*replace the part to send to alaa */
+
+void trimend(string & x)
 {
-	string s;
-	trim(s1);
-	int pos = findOPs(s1, 0), pos1, pos2;
-	while (pos != -1)
+	for (int i = x.length() - 1; i>0; i--)
 	{
-		pos1 = findSpaceBefore(s1, pos);
-		pos2 = findSpaceAfter(s1, pos);
-		s = s1.substr(pos1 + 1, pos2 - pos1 - 1);
-		// Alaa's fn
-		s1 = s1.replace(pos1 + 1, pos2 - pos1 - 1, "0.0"); // replace medhat with  alaa's fn .sendstring()
-		pos = findOPs(s1, 0);
+		if (x[i] == ' ')
+		{
+			x.erase(i, 1);
+			i--;
+		}
+		else
+			break;
 	}
 }
+void trimbegin(string & x)
+{
+	for (int i = 0; i<x.length() - 1; i++)
+	{
+		if (x[i] == ' ')
+		{
+			x.erase(i, 1);
+			i--;
+		}
+		else
+			break;
+	}
+}
+void trimSpace(string & x)
+{
+	for (int i = 0; i<x.length(); i++)
+	{
+		if (x[i] == ' ')
+		{
+			x.erase(i, 1);
+			i--;
+		}
+	}
+}
+/*  get varible index from  the array   */
+int index(string varName, string * variableNames, int NVar)
+{
+	for (int i = 0; i <= NVar; i++)
+	{
+		if (varName == variableNames[i])
+		{
+			return i;
+		}
+	}
+	return (-1);
+}
+
+string parse(string &operation)
+{
+	string varName, s2, s;
+	int pos, flag = 0, index;
+	CMatrix x;
+	if (operation.find("=") != -1)
+	{
+		varName = operation.substr(0, operation.find("="));
+		trimSpace(varName);
+		s2 = operation.substr(operation.find("=") + 1);
+		if (s2.find("\r\n") != -1) s2 = s2.replace(s2.find("\r\n"), 2, ";");
+
+		if (s2[s2.length() - 1] == ';')   // to know whether to print or not
+		{
+			flag = 1;
+			s2.erase(s2.length() - 1, 1);
+		}
+
+		trimend(s2);					//removing extra spaces and update string
+		trimbegin(s2);
+		advancedTrim(s2);
+		updateString(s2);
 
 
-////////////////////////////////////////////// Modify the string to match the standard format \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+		for (int i = 0; i < NVar; i++)   //search if there's an existant matrix variable name (A or B etc.) in the string 
+		{
+			pos = s2.find(variableNames[i]);
+			while (pos != -1)
+			{
+				s2.replace(pos, varName.length(), Matrices[i].sendString());
+				pos = s2.find(variableNames[i]);
+			}
+		}
 
+		s2 = advancedConcatination(s2);   // the string is in the standard format of matrix
+		x.copy(s2);
+
+		for (int i = 0; i <= NVar; i++)  //search if the variable before = exists or not in variableNames
+		{
+			if (variableNames[i] == varName)         //update the value of existant matrix
+				index = i;
+			else									//add new matrix to Matrices
+			{
+				index = NVar;
+				variableNames[index] = varName;
+				NVar++;
+				break;
+			}
+		}
+		Matrices[index] = x;
+		if (flag == 0){ cout << Matrices[index].getString(); } /*print the matrix when there is no semicolon in the end of the operation*/
+	}
+
+	//if just the Matrix name is written to be printed
+	else
+	{
+		varName = operation;
+		trimSpace(varName);
+		trimend(varName);
+		for (int i = 0; i <= NVar; i++)
+		{
+			if (variableNames[i] == varName)
+				cout << Matrices[i].getString() << endl;
+			else throw("Error:you try to print undefined Matrix");
+		}
+	}
+
+	return Matrices[index].sendString();
+}
 
 string modify(string& s)
 {
@@ -237,162 +327,49 @@ string modify(string& s)
 
 }
 
-//////////////////////////////////////////////Parsing//////////////////////////////////////////////
-
-string parse(string &operation)
+string advancedConcatination(string s)  // s= [[1.2 2.3; 1 2.3; [1.3 2.4;4.6 1.3]],[3.2 1;-7.8 2;-3.2 3; 1.2 4]]
 {
-	string varName, s2,s;
-	int pos, flag=0, index;
-	CMatrix x;
-	if (operation.find("=") != -1)
+	int i, j, k;
+	string s1, s2;
+	CMatrix A;
+	i = s.find("] [");
+	if (i != -1) s = s.replace(i + 1, 1, ",");
+	i = s.find("],[");
+	if (i < 0)
 	{
-		varName = operation.substr(0, operation.find("="));
-		trimSpace(varName);
-		s2 = operation.substr(operation.find("=") + 1);
-		if (s2.find("\r\n") != -1) s2 = s2.replace(s2.find("\r\n"), 2, ";");
-
-		if (s2[s2.length() - 1] == ';')   // to know whether to print or not
-		{
-			flag = 1;
-			s2.erase(s2.length() - 1, 1);
-		}
-
-		trimend(s2);					//removing extra spaces and update string
-		advancedTrim(s2);
-		updateString(s2);              //waiting for alaa's fn
-
-
-		for (int i = 0; i <= NVar; i++)   //search if there's an existant matrix variable name (A or B etc.) in the string 
-		{
-			pos = s2.find(variableNames[i]);
-			while (pos != -1)
-			{
-				s2.replace(pos, varName.length(), Matrices[i].sendString());
-				pos = s2.find(variableNames[i]);
-			}
-		}
-
-		s2 = modify(s2);   // the string is in the standard format of matrix
-		x.copy(s2);
-		for (int i = 0; i <= NVar; i++)  //search if the variable before = exists or not in variableNames
-		{
-			if (variableNames[i] == varName)         //update the value of existant matrix
-				index = i;
-			else									//add new matrix to Matrices
-			{
-				index = NVar;
-				variableNames[index] = varName;
-				NVar++;
-				break;
-			}
-		}
-		Matrices[index] = x;
-		if (flag == 0){ cout << Matrices[index].getString(); } /*print the matrix when there is no semicolon in the end of the operation*/
+		A.copy(s); return A.sendString();
 	}
-
-	//if just the Matrix name is written to be printed
-	else
+	while (i != -1)
 	{
-		varName = operation;
-		trimSpace(varName);
-		trimend(varName);
-		for (int i = 0; i <= NVar; i++)
+		s1 = s.substr(0, i);						// s1= [[1.2 2.3; 1 2.3; [1.3 2.4;4.6 1.3]
+		j = s1.rfind('[');
+		//if (j < 0) throw ("Error: invalid Matrix");
+		k = s1.find(']', j);
+		//if (k < 0) throw ("Error: invalid Matrix");
+		while (j != -1 && k != -1)
 		{
-			if (variableNames[i] == varName)
-				cout << Matrices[i].getString() << endl;
-			else throw("Error:you try to print undefined Matrix");
+			s1.erase(k, 1);
+			s1.erase(j, 1);							//s1= [[1.2 2.3; 1 2.3; 1.3 2.4;4.6 1.3
+			j = s1.rfind('[');
+			k = s1.find(']', j);
 		}
+		s.replace(0, i, s1);						// s= [[1.2 2.3; 1 2.3; 1.3 2.4;4.6 1.3],[3.2 1;-7.8 2;-3.2 3; 1.2 4]]
+		i = s.find("],[", i + 2);
 	}
+	i = s.rfind("],[");
+	s1 = s.substr(i + 3);
+	j = s1.rfind('[');
+	k = s1.find(']', j);
+	while (j != -1 && k != -1)
+	{
+		s1.erase(k, 1);
+		s1.erase(j, 1);							//s1= [[1.2 2.3; 1 2.3; 1.3 2.4;4.6 1.3
+		j = s1.rfind('[');
+		k = s1.find(']', j);
+	}
+	s.replace(i + 3, s1.length() + 1, s1);
 
-	return Matrices[index].sendString();
+	s2 = modify(s);
+	A.copy(s2);
+	return A.sendString();
 }
-
-
-
-/*
-int main(int argc, char*argv[])
-{
-			
-	
-	
-		    try
-			{
-				string op;
-
-				if (argc == 1)
-				{
-					while (1)
-					{
-
-						getline(cin, op);
-						int m;
-						m = op.find("[");
-						if (m>=0 && m<op.length())
-						{
-							while (1)
-							{
-								m = op.find("]");
-								if (m<0 || m >= op.length())
-								{
-									string temp;
-									getline(cin, temp);
-									op = op + temp;
-								}
-								else
-								{
-									break;
-								}
-							}
-						}
-
-						excute(op);
-
-					}
-
-				}
-				else
-				{
-					ifstream infile(argv[1]);
-					while (!infile.eof())
-					{
-
-						getline(infile, op);
-						int m;
-						m = op.find("[");
-						if (m>=0 && m<op.length())
-						{
-							while (1)
-							{
-								m = op.find("]");
-								if (m<0 || m >= op.length())
-								{
-									string temp;
-									getline(infile, temp);
-									op = op + temp;
-								}
-								else
-								{
-									break;
-								}
-							}
-						}
-
-						if(op.find("[")==-1) {trimSpace(op); cout<<op<<endl;}
-						excute(op);
-
-
-					}
-				}
-				
-			}
-			catch (char* error)
-			{
-				cout << error << endl;
-			}
-
-		
-
-	delete[] varibleNames;
-	delete[] Matrices;
-
-}*/
