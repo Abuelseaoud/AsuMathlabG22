@@ -1004,7 +1004,7 @@ void updateString(string& s1)                /*replace the part to send to alaa 
 		if(g.getn()==1) {s=g.sendString(); s.erase(s.find("["),1);s.erase(s.find("]"),1);}
 		else s=s=g.sendString();
 		s1 = s1.replace(pos1 + 1, pos2 - pos1 - 1, s); 
-		pos = findOPs(s1, 0);
+		pos = findOPs(s1, pos+1);
 	}
 	
 }
