@@ -803,7 +803,7 @@ void  operationHandling (string s)
 	}
 }
 
-void updateString(string& s1)                /*replace the part to send to alaa */
+void updateString(string& s1)               
 {
 	string s;
 	trim(s1);
@@ -813,8 +813,8 @@ void updateString(string& s1)                /*replace the part to send to alaa 
 		pos1 = findSpaceBefore(s1, pos);
 		pos2 = findSpaceAfter(s1, pos);
 		s = s1.substr(pos1 + 1, pos2 - pos1 - 1);
-		// Alaa's fn
-		s1 = s1.replace(pos1 + 1, pos2 - pos1 - 1, "0.001"); // replace medhat with  alaa's fn .sendstring()
+		s=Execution(s).sendString();
+		s1 = s1.replace(pos1 + 1, pos2 - pos1 - 1, s);
 		pos = findOPs(s1, 0);
 	}
 }
