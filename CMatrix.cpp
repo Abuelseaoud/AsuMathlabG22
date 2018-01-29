@@ -864,6 +864,220 @@ CMatrix CMatrix::elementDiv(double d)
 
 }
 
+////////////////////////////////////////////////////////////////////////////////////// trigonometric fns
+
+CMatrix sin(CMatrix &m)                  ////////////////////// gets sin matrix
+{
+	 CMatrix n(m.nR, m.nC);
+	 for (int i = 0; i < n.nR;i++)
+		 for (int j = 0; j < n.nC; j++)
+			 n.values[i][j] = sin(m.values[i][j]);
+	 return n;
+}
+
+CMatrix asin(CMatrix &m)                  ////////////////////// gets asin matrix
+{
+	 CMatrix n(m.nR, m.nC);
+	 for (int i = 0; i < n.nR;i++)
+		 for (int j = 0; j < n.nC; j++)
+			 n.values[i][j] = asin(m.values[i][j]);
+	 return n;
+}
+CMatrix acos(CMatrix &m)                  ////////////////////// gets asin matrix
+{
+	 CMatrix n(m.nR, m.nC);
+	 for (int i = 0; i < n.nR;i++)
+		 for (int j = 0; j < n.nC; j++)
+			 n.values[i][j] = acos(m.values[i][j]);
+	 return n;
+}
+CMatrix atan(CMatrix &m)                  ////////////////////// gets asin matrix
+{
+	 CMatrix n(m.nR, m.nC);
+	 for (int i = 0; i < n.nR;i++)
+		 for (int j = 0; j < n.nC; j++)
+			 n.values[i][j] = atan(m.values[i][j]);
+	 return n;
+}
+
+
+
+CMatrix cos(CMatrix &m)                  ////////////////////// gets cos matrix
+{
+	 CMatrix n(m.nR, m.nC);
+	 for (int i = 0; i < n.nR;i++)
+		 for (int j = 0; j < n.nC; j++)
+			 n.values[i][j] = cos(m.values[i][j]);
+	 return n;
+}
+
+CMatrix tan(CMatrix &m)                  ////////////////////// gets tan matrix
+{
+	 CMatrix n(m.nR, m.nC);
+	 for (int i = 0; i < n.nR;i++)
+		 for (int j = 0; j < n.nC; j++)
+			 n.values[i][j] = tan(m.values[i][j]);
+	 return n;
+}
+
+CMatrix sinh(CMatrix &m)                  ////////////////////// gets sinh matrix
+{
+	 CMatrix n(m.nR, m.nC);
+	 for (int i = 0; i < n.nR;i++)
+		 for (int j = 0; j < n.nC; j++)
+			 n.values[i][j] = sinh(m.values[i][j]);
+	 return n;
+}
+
+CMatrix cosh(CMatrix &m)                  ////////////////////// gets cosh matrix
+{
+	 CMatrix n(m.nR, m.nC);
+	 for (int i = 0; i < n.nR;i++)
+		 for (int j = 0; j < n.nC; j++)
+			 n.values[i][j] = cosh(m.values[i][j]);
+	 return n;
+}
+
+CMatrix tanh(CMatrix &m)                  ////////////////////// gets tanh matrix
+{
+	 CMatrix n(m.nR, m.nC);
+	 for (int i = 0; i < n.nR;i++)
+		 for (int j = 0; j < n.nC; j++)
+			 n.values[i][j] = tanh(m.values[i][j]);
+	 return n;
+}
+CMatrix sech(CMatrix &m)                  ////////////////////// gets sinh matrix
+{
+	 CMatrix n(m.nR, m.nC);
+	 for (int i = 0; i < n.nR;i++)
+		 for (int j = 0; j < n.nC; j++)
+			 n.values[i][j] = 1/cosh(m.values[i][j]);
+	 return n;
+}
+CMatrix csch(CMatrix &m)                  ////////////////////// gets sinh matrix
+{
+	 CMatrix n(m.nR, m.nC);
+	 for (int i = 0; i < n.nR;i++)
+		 for (int j = 0; j < n.nC; j++)
+			 n.values[i][j] = 1/sinh(m.values[i][j]);
+	 return n;
+}
+CMatrix coth(CMatrix &m)                  ////////////////////// gets sinh matrix
+{
+	 CMatrix n(m.nR, m.nC);
+	 for (int i = 0; i < n.nR;i++)
+		 for (int j = 0; j < n.nC; j++)
+			 n.values[i][j] = 1/tanh(m.values[i][j]);
+	 return n;
+}
+
+CMatrix sec(CMatrix &m)                  ////////////////////// gets sec matrix
+{	
+	 CMatrix n(m.nR, m.nC);
+	 for (int i = 0; i < n.nR;i++)
+		 for (int j = 0; j < n.nC; j++)
+		 {
+			 if(cos(m.values[i][j])==0)
+				 throw ("Marh Error .. Invalid matrix");
+			 n.values[i][j] = 1/(cos(m.values[i][j]));
+		 }
+	 return n;
+}
+
+CMatrix csc(CMatrix &m)                  ////////////////////// gets csc matrix
+{
+	 CMatrix n(m.nR, m.nC);
+	 for (int i = 0; i < n.nR;i++)
+		 for (int j = 0; j < n.nC; j++)
+		 {
+			 if (sin(m.values[i][j]) ==0)
+				 throw ("Marh Error .. Invalid matrix");
+			 n.values[i][j] = 1/(sin(m.values[i][j]));
+		 }
+	 return n;
+}
+
+CMatrix cot(CMatrix &m)                  ////////////////////// gets cot matrix
+{
+	 CMatrix n(m.nR, m.nC);
+	 for (int i = 0; i < n.nR;i++)
+		 for (int j = 0; j < n.nC; j++)
+		 {
+			 if (tan(m.values[i][j]) ==0)
+				 throw ("Marh Error .. Invalid matrix");
+			 n.values[i][j] = 1/(tan(m.values[i][j]));
+		 }
+	 return n;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////// Roots
+
+CMatrix sqrt(CMatrix &m)                  ////////////////////// gets sqrt matrix
+{
+	 CMatrix n(m.nR, m.nC);
+	 for (int i = 0; i < n.nR;i++)
+		 for (int j = 0; j < n.nC; j++)
+		 {
+			 if (m.values[i][j] <=0)
+				 throw ("Marh Error .. Invalid matrix");
+			 n.values[i][j] = sqrt(m.values[i][j]);
+		 }
+	 return n;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////powers
+
+CMatrix CMatrix :: powElement(double p)                      ///////////////////power each element
+{
+	CMatrix r = *this;
+	 for (int iR=0 ; iR<nR ; iR++) 
+		 for (int iC=0 ; iC<nC ; iC++)
+		 {
+			 r.values[iR][iC]=pow(r.values[iR][iC],p);
+		 }
+		 return r;
+}
+
+CMatrix CMatrix :: pow_1x1_matrix(double p)                  /////////////////// fraction power for 1x1 matrix
+{
+	CMatrix r = *this;
+	r.values[0][0] = pow(values[0][0] , p) ;
+	return r;
+}
+
+int binary(int number ,int location)
+{
+  if((1 &(number>>location))==0) return 0;
+  else return 1;
+}
+
+
+
+
+CMatrix CMatrix :: pow_matrix(int p)                                    /////////////////// power for matrix
+{
+	CMatrix result (nR , nC ,2,0);
+	CMatrix y = *this ;
+	int flag=0;
+	
+	if (p<0)
+	{
+		p*= -1; flag =1 ;
+	}
+	double h = log10(2) ;
+	int k=((log10(p))/h) +1;
+	for ( int i=0 ; i<k ; i++ )          
+	{
+		if (binary (p,i)==1)
+			result = result * y;
+		y = y*y;
+	}
+	if (flag == 1)
+		return result.getInverse();
+	
+	return result ; 
+}
+
 
 
 
