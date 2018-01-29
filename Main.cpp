@@ -717,7 +717,69 @@ void errordetection(string &s)
 	if(counter) throw("error:invalid expression");
 }
 
-
+void  operationHandling (string s)
+{
+	trimSpace(s);
+	if(s.length()==0) return;
+    errordetection(s);
+	int printFlag=1;
+	if(s[s.length()-1]==';'){printFlag=0; s.erase(s.length()-1);}
+	if(s.find("=")==-1)
+	{
+			if(printFlag==0)return;
+			if(index(s,varibleNames,NVar)==-1)cout<<"ans ="<<endl;
+			else cout<<s<<" ="<<endl;
+			CMatrix result;
+			result=Execution(s);
+            cout<<result;
+            cout<<endl;
+            return;
+	}
+	else
+	{
+		string destinations,calculations;
+		int u=s.rfind("=");
+		destinations=s.substr(0,u+1);
+		calculations=s.substr(u+1);
+		CMatrix result;
+		result=Execution(calculations);
+        int destinationsNum=1;
+        u=destinations.find("=");
+        int flagz=0;
+        while(u!=-1)
+        {
+        	int i=index(destinations.substr(0,u),varibleNames,NVar);
+        	if(i!=-1) 
+        		{
+        			Matrices[i]=result;
+        			if(printFlag==1 &&flagz==0) 
+        				{
+        					cout<<varibleNames[i]<<" ="<<endl;
+        					flagz++;
+        				}
+        		}
+        	else
+        	{
+        		Matrices[NVar]=result;
+        		varibleNames[NVar]=destinations.substr(0,u);
+        		if(printFlag==1 &&flagz==0) 
+        				{
+        					cout<<varibleNames[NVar]<<" ="<<endl;
+        					flagz++;
+        				}
+        		NVar++;
+        	}
+        	destinations.erase(0,u+1);
+        	if(destinations.length()<=0) u=-1;
+        	else u=destinations.find("=");
+        }
+        if(printFlag==1)
+        {
+        	cout<<result<<endl;
+        }
+		tempNVar=0;
+	}
+}
 
 int main(int argc, char*argv[])
 {
