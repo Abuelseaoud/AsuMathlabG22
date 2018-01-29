@@ -569,7 +569,81 @@ CMatrix functionExe(int i,CMatrix &m,int r=0,int c=0)
 	}  		
 	         
 }
+CMatrix Execution(string s )
+{
 
+	for (int x=0;x<26;x++)
+	{
+    		while(s.find(functionsname[x])!=-1)
+    			{	
+    				    string func;
+    				    int index=s.find(functionsname[x]);
+    				    int counter=0;
+    				    int flag=0;
+        				for(int z=index;z<s.length();z++)
+        					{	
+            					if(s[z]=='(')
+                					{	counter++;
+                    					flag=1;
+                    				}
+            					if(s[z]==')')
+                					{	counter--;
+                    					flag=1;
+                    				}
+            					if(counter==0&&flag==1)
+            						{
+                						func=s.substr(index+functionsname[x].length()+1,z-index-functionsname[x].length()-1);
+                						string func1;
+                						CMatrix e(0);
+                						if(x==19||x==20||x==21||x==22)
+                						{
+                							func1=func.substr(func.find(",")+1);
+                							func.erase(func.find(","));
+                							e=Execution(func1);
+                						}
+                							
+                						CMatrix c=Execution(func);
+                					
+                						c=functionExe(x,c,c(0,0),e(0,0));
+    									
+                						tempMatrices[tempNVar]=c;
+                						////put the name of temp matrix 
+                						
+                						
+                						
+                						
+                						if(index==0)
+                						{
+                							s.erase(index,z-index+1);
+                							s=tempvaribleNames[tempNVar]+s;
+                						}
+                						else if(z==(s.length()-1))
+                						{
+                							s.erase(index,z-index+1);
+                							s=s+tempvaribleNames[tempNVar];
+                						}
+                						else 
+                						{
+                								s=s.substr(0,index)+tempvaribleNames[tempNVar]+s.substr(z+1);
+                						}
+                							tempNVar++;
+                							break;
+            						}
+
+
+        					}	
+    			}
+
+
+
+
+	}
+
+  
+
+	return postfixCalculation(s);
+
+}
 
 int main(int argc, char*argv[])
 {
