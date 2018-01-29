@@ -819,7 +819,7 @@ void updateString(string& s1)                /*replace the part to send to alaa 
 	}
 }
 
-void trim(string& text)
+void trim(string& text)      //////////trimming spaces around operations//////////
 {
 	int n, startpos = 0;
 	int pos;
@@ -848,7 +848,7 @@ void trim(string& text)
 	} while (pos != -1);
 }
 
-int myfind(string& s, int pos)
+int myfind(string& s, int pos) ////////// find the operations for trim //////////////////////
 {
 	for (int i = pos; i < s.length(); i++)
 	{
@@ -861,7 +861,7 @@ int myfind(string& s, int pos)
 
 	return -1;
 }
-int findOPs(string& s, int pos)         // Amira's find function  
+int findOPs(string& s, int pos)         // find operations to send to be calculated 
 {
 	for (int i = pos; i < s.length(); i++)
 	if (s[i] == '+' || s[i] == '-' || s[i] == '*' || s[i] == '/' || s[i] == '^' || (s[i] == 's' && s[i + 1] == 'i' && s[i + 2] == 'n')
@@ -871,21 +871,21 @@ int findOPs(string& s, int pos)         // Amira's find function
 		return i;
 	return -1;
 }
-int findSpaceBefore(string& s, int pos)         // Amira's find function  
+int findSpaceBefore(string& s, int pos)         // find begining of operation
 {
 	for (int i = pos; i >= 0; i--)
 	if (s[i] == ' ' || s[i] == '[' || s[i] == ']' || s[i] == ';')
 		return i;
 	return -1;
 }
-int findSpaceAfter(string& s, int pos)         // Amira's find function  
+int findSpaceAfter(string& s, int pos)         // find the end of operation
 {
 	for (int i = pos; i < s.length(); i++)
 	if (s[i] == ' ' || s[i] == '[' || s[i] == ']' || s[i] == ';')
 		return i;
 	return -1;
 }
-string parse(string &operation)
+string parse(string &operation)             /////take the string and return it in the form of phase 1
 {
 	string varName, s2, s;
 	int pos, flag = 0, index;
@@ -1059,6 +1059,9 @@ string advancedConcatination(string s)  // s= [[1.2 2.3; 1 2.3; [1.3 2.4;4.6 1.3
   
   
   /////////////////////////////////end of Matrix Parsing ////////////////////////////////////////////
+	
+	
+	
 int main(int argc, char*argv[])
 {
 
