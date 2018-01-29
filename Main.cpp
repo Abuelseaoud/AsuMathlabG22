@@ -666,7 +666,7 @@ void errordetection(string &s)
 {
 
 	int counter =0;
-	if(((   Isoperator(s[0]) && (s[0]!='+'&&s[0]!='-')|| Isoperator(s[s.length()-1]))))   throw("error:invalid expression");
+	if(((   Isoperator(s[0]) && (s[0]!='+'&&s[0]!='-') || (Isoperator(s[s.length()-1]) &&s[s.length()-1]!='\''))))  throw("error:invalid expression");
 	for(int i=0;i<s.length()-1;i++)
 	{
 
@@ -923,7 +923,7 @@ int main(int argc, char*argv[])
 									         getline(infile, temp);
 									         if(temp.length()!=0)
 											{
-												if(op[op.length()-1]=='\n') op = op + temp;
+												if(op[op.length()-1]=='\n' ) op = op + temp;
 											    else op=op+"\r\n"+temp;
 											
 											    for (int i=0;i<(temp.length()) ;i++)
@@ -936,6 +936,7 @@ int main(int argc, char*argv[])
 								          }
 								        else break;								
 							         }
+							         cout<<op<<endl;
                                      for(int i=0;i<op.length();i++) if((int)op[i]==13){op.erase(i,1);i--;}
 							         parse(op); 
 						        }
