@@ -1078,6 +1078,74 @@ CMatrix CMatrix :: pow_matrix(int p)                                    ////////
 	return result ; 
 }
 
+////////////////////////////////////////////////////////////////////////////////////////logarithmic
+
+CMatrix log(CMatrix &m)                  ////////////////////// gets log matrix
+{
+	 CMatrix n(m.nR, m.nC);
+	 for (int i = 0; i < n.nR;i++)
+		 for (int j = 0; j < n.nC; j++)
+		 {
+			  if (m.values[i][j] <= 0)
+				 throw ("Math Error .. Invalid matrix ");
+			 n.values[i][j] = log10 (m.values[i][j]);
+		 }
+	 return n;
+}
+
+CMatrix ln(CMatrix &m)                  ////////////////////// gets ln matrix
+{
+	 CMatrix n(m.nR, m.nC);
+	 for (int i = 0; i < n.nR;i++)
+		 for (int j = 0; j < n.nC; j++)
+		 {
+			 if (m.values[i][j] <= 0)
+				 throw ("Math Error .. Invalid matrix ");
+			 n.values[i][j] = log(m.values[i][j]);
+		 }
+	 return n;
+}
+
+CMatrix exp(CMatrix &m)                  ////////////////////// gets exp matrix
+{
+	 CMatrix n(m.nR, m.nC);
+	 for (int i = 0; i < n.nR;i++)
+		 for (int j = 0; j < n.nC; j++)
+			 n.values[i][j] = exp(m.values[i][j]);
+	 return n;
+}
+
+//////////////////////////////////////////////////////////////////////////////////
+
+CMatrix asec(CMatrix &m)                  ////////////////////// gets asec matrix
+{
+	 CMatrix n(m.nR, m.nC);
+	 for (int i = 0; i < n.nR;i++)
+		 for (int j = 0; j < n.nC; j++)
+			 n.values[i][j] = acos(1/m.values[i][j]);
+	 return n;
+}
+
+CMatrix acsc(CMatrix &m)                  ////////////////////// gets acsc matrix
+{
+	 CMatrix n(m.nR, m.nC);
+	 for (int i = 0; i < n.nR;i++)
+		 for (int j = 0; j < n.nC; j++)
+			 n.values[i][j] = asin(1/m.values[i][j]);
+	 return n;
+}
+
+
+CMatrix acot(CMatrix &m)                  ////////////////////// gets acot matrix
+{
+	 CMatrix n(m.nR, m.nC);
+	 for (int i = 0; i < n.nR;i++)
+		 for (int j = 0; j < n.nC; j++)
+			 n.values[i][j] = atan(1/m.values[i][j]) ;
+	 return n;
+}
+
+
 
 
 
