@@ -122,6 +122,14 @@ public:
 	CMatrix powElement(double p) ;                 /////////////////// power each element
 	CMatrix pow_1x1_matrix(double p) ;             /////////////////// fraction power for 1x1 matrix
 	CMatrix pow_matrix(int p) ;                    /////////////////// power for matrix
+	
+	
+	//////////////////////////////////////////////////////////////////////////////////// Logarithmic
+
+	friend CMatrix log(CMatrix &m);               /////// log matrix
+	friend CMatrix ln(CMatrix &m);                /////// ln matrix
+	friend CMatrix exp(CMatrix &m);               /////// exp matrix
+
 
 
 };
