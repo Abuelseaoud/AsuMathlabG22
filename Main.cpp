@@ -396,6 +396,180 @@ return result.top();
 
 
 
+CMatrix functionExe(int i,CMatrix &m,int r=0,int c=0)
+{
+	switch(i)
+	{   case 0:
+	           {
+	    	     return sinh(m);
+	             break;
+
+	    	   }
+	         
+	    case 1: 
+	            {
+	            	return cosh(m);
+	                break;
+	            }
+	         
+	     case 2:
+	           {
+	    	     return tanh(m);
+	             break;
+
+	    	   }
+	    case 3:
+	           {
+	    	     return coth(m);
+	             break;
+
+	    	   }
+	    case 4:
+	           {
+	    	     return sech(m);
+	             break;
+
+	    	   }
+	    case 5:
+	           {
+	    	     return csch(m);
+	             break;
+
+	    	   }
+	         
+	    case 6: 
+	            {
+	            	return sin(m);
+	                break;
+	            }
+	         
+	    case 7:
+	           {
+	    	     return cos(m);
+	             break;
+
+	    	   }
+	    case 8:
+	           {
+	    	     return tan(m);
+	             break;
+
+	    	   }
+	    case 9:
+	           {
+	    	     return cot(m);
+	             break;
+
+	    	   }
+	    case 10:
+	           {
+	    	     return sec(m);
+	             break;
+
+	    	   }
+	         
+	    case 11: 
+	            {
+	            	return csc(m);
+	                break;
+	            }
+	         
+	    case 12:
+	            {
+	    	     return asin(m);
+	             break;
+
+	    	    }
+	    case 13:
+	           {
+	    	     return acos(m);
+	             break;
+
+	    	   }
+	    case 14:
+	           {
+	    	     return atan(m);
+	             break;
+
+	    	   }
+	    case 15:
+	           {
+	    	     return acot(m);
+	             break;
+
+	    	   }
+	         
+	    case 16: 
+	            {
+	            	return asec(m);
+	                break;
+	            }
+	         
+	     case 17:
+	           {
+	    	     return acsc(m);
+	             break;
+
+	    	   }
+	    case 18:
+	           {
+	    	     return sqrt(m);
+	             break;
+
+	    	   }
+	   case 19:
+	           {
+	           	
+	    	     return CMatrix (r,c,3,0);
+	             break;
+
+	    	   }
+            					                  
+        case 20:
+	           { 
+	    	     return CMatrix (r,c,2,0);
+	             break;
+
+	    	   }
+	         
+	    case 21: 
+	            {
+	            	return CMatrix (r,c,0,0);
+	                break;
+	            }
+	         
+	     case 22:
+	           {
+	    	     return CMatrix (r,c,1,0);
+	             break;
+
+	    	   }
+	    case 23:
+	           {
+	    	     return log(m);
+	             break;
+
+	    	   }
+	    case 24:
+	           {
+	    	     return ln(m);
+	             break;
+
+	    	   }
+	     case 25:
+	           {
+	    	     return exp(m);
+	             break;
+
+	    	   }
+	         
+	                					           
+ 
+	         
+	}  		
+	         
+}
+
 
 int main(int argc, char*argv[])
 {
