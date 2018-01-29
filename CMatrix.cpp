@@ -1178,12 +1178,12 @@ string CMatrix::sendString()
 			char buffer[50];
 			if (iC < nC - 1)
 			{
-				sprintf_s(buffer, 50, "%g ", values[iR][iC]);
+				snprintf(buffer, 50, "%g ", values[iR][iC]);
 				s += buffer;
 			}
 			else if (iC == nC - 1)
 			{
-				sprintf_s(buffer, 50, "%g", values[iR][iC]);
+				snprintf(buffer, 50, "%g", values[iR][iC]);
 				s += buffer;
 			}
 		}
@@ -1192,10 +1192,9 @@ string CMatrix::sendString()
 			s += ";";
 		}
 	} s += "]";
-	if (nR>0 && nC>0 )return s;			
-	else throw("empty matrix");             
+	if (nR>0 && nC>0 )return s;				
+	else throw("empty matrix sendstring");             
 }
-
 
 
 
