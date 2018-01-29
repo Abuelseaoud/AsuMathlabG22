@@ -1,7 +1,11 @@
-#include "CMatrix.h"
 #include <iostream>
 #include <string>
 #include <cstring>
+#include <stdio.h>     
+#include <stdarg.h>
+#include <algorithm>
+#include "CMatrix.h"
+
 #include <string.h>
 #include <stdlib.h>
 #include <fstream>
@@ -13,7 +17,12 @@
 #include <ctgmath>
 using namespace std;
 
+
+using namespace std;
 //global variables 
+
+
+
 int NVar = 0;
 int tempNVar = 0;
 //array of varibles names
@@ -32,61 +41,55 @@ const string functionsname []={ "sinh",	"cosh",	"tanh","coth","sech","csch",
 
 void trimend(string & x)
 {
-	for (int i = x.length() - 1; i<0; i--)
+	for (int i = x.length() - 1; i>0; i--)
 	{
 		if (x[i] == ' ')
 		{
 			x.erase(i, 1);
-
 			i--;
 		}
 		else
-		{
 			break;
-
-		}
 	}
 }
-
-void trimSpace(string & x)
+void trimbegin(string & x)
 {
-	for (int i = 0; i<x.length(); i++)
-
+	for (int i = 0; i<x.length() - 1; i++)
 	{
 		if (x[i] == ' ')
 		{
 			x.erase(i, 1);
-
 			i--;
 		}
-
+		else
+			break;
 	}
-
-
-
 }
-
-
+void trimSpace(string & x)
+{
+	for (int i = 0; i<x.length(); i++)
+	{
+		if (x[i] == ' ')
+		{
+			x.erase(i, 1);
+			i--;
+		}
+	}
+}
 
 /*  get varible index from  the array   */
 int index(string varName, const string * varibleNames, int NVar)
 {
 
 	for (int i = 0; i < NVar; i++)
+
 	{
-
-
-		if (varName == varibleNames[i])
+		if (varName == variableNames[i])
 		{
-
-
-
 			return i;
 		}
-
 	}
 	return (-1);
-
 }
 
 // Function to get weight of an operator. An operator with higher weight will have higher precedence.
@@ -692,7 +695,11 @@ void errordetection(string &s)
 
 					throw("error:invalid expression");
 				}
-		}
+
+	
+
+
+
 
 
 
@@ -780,7 +787,278 @@ void  operationHandling (string s)
 		tempNVar=0;
 	}
 }
+  
+  
+//////////////////////////////////////////////////////////Matrix parsing/////////////////////////  
+  
+  void advancedTrim(string& s)
+{
+	for (int i = 0; i < s.length(); i++)
+	{
+		if (s[i] == ' ' && s[i + 1] == ' ')
+		{
+			s.erase(i, 1);
+			i--;
+		}
+	}
+}
 
+void updateString(string& s1)                /*replace the part to send to alaa */
+{
+	string s;
+	trim(s1);
+	int pos = findOPs(s1, 0), pos1, pos2;
+	while (pos != -1)
+	{
+		pos1 = findSpaceBefore(s1, pos);
+		pos2 = findSpaceAfter(s1, pos);
+		s = s1.substr(pos1 + 1, pos2 - pos1 - 1);
+		// Alaa's fn
+		s1 = s1.replace(pos1 + 1, pos2 - pos1 - 1, "0.001"); // replace medhat with  alaa's fn .sendstring()
+		pos = findOPs(s1, 0);
+	}
+}
+
+void trim(string& text)
+{
+	int n, startpos = 0;
+	int pos;
+	pos = myfind(text, startpos);
+	do
+	{
+		n = 0;
+		if (pos != -1)
+		{
+			if (text[pos + 1] == ' ')
+			{
+				text.erase(pos + 1, 1);
+				startpos = pos + 1;
+				n++;
+			}
+			if (text[pos - 1] == ' ')
+			{
+				text.erase(pos - 1, 1);
+				startpos = pos;
+				n++;
+			}
+			if (n == 0)
+				startpos = pos + 1;
+			pos = myfind(text, startpos);
+		}
+	} while (pos != -1);
+}
+
+int myfind(string& s, int pos)
+{
+	for (int i = pos; i < s.length(); i++)
+	{
+
+		if (s[i] == '+' || s[i] == '-' || s[i] == '*' || s[i] == '/' || s[i] == '^' || s[i] == ';' || s[i] == ','
+			|| (s[i] == '.' && s[i + 1] == '+') || (s[i] == '.' && s[i + 1] == '-') || (s[i] == '.' && s[i + 1] == '*')
+			|| (s[i] == '.' && s[i + 1] == '/') || (s[i] == '.' && s[i + 1] == '^'))
+			return i;
+	}
+
+	return -1;
+}
+int findOPs(string& s, int pos)         // Amira's find function  
+{
+	for (int i = pos; i < s.length(); i++)
+	if (s[i] == '+' || s[i] == '-' || s[i] == '*' || s[i] == '/' || s[i] == '^' || (s[i] == 's' && s[i + 1] == 'i' && s[i + 2] == 'n')
+		|| (s[i] == 'c' && s[i + 1] == 'o' && s[i + 2] == 's') || (s[i] == 't' && s[i + 1] == 'a' && s[i + 2] == 'n')
+		|| (s[i] == 'l' && s[i + 1] == 'o' && s[i + 2] == 'g') || (s[i] == 'l' && s[i + 1] == 'n')
+		|| (s[i] == 's' && s[i + 1] == 'q' && s[i + 2] == 'r' && s[i + 3] == 't'))
+		return i;
+	return -1;
+}
+int findSpaceBefore(string& s, int pos)         // Amira's find function  
+{
+	for (int i = pos; i >= 0; i--)
+	if (s[i] == ' ' || s[i] == '[' || s[i] == ']' || s[i] == ';')
+		return i;
+	return -1;
+}
+int findSpaceAfter(string& s, int pos)         // Amira's find function  
+{
+	for (int i = pos; i < s.length(); i++)
+	if (s[i] == ' ' || s[i] == '[' || s[i] == ']' || s[i] == ';')
+		return i;
+	return -1;
+}
+string parse(string &operation)
+{
+	string varName, s2, s;
+	int pos, flag = 0, index;
+	CMatrix x;
+	if (operation.find("=") != -1)
+	{
+		varName = operation.substr(0, operation.find("="));
+		trimSpace(varName);
+		s2 = operation.substr(operation.find("=") + 1);
+		if (s2.find("\r\n") != -1) s2 = s2.replace(s2.find("\r\n"), 2, ";");
+
+		if (s2[s2.length() - 1] == ';')   // to know whether to print or not
+		{
+			flag = 1;
+			s2.erase(s2.length() - 1, 1);
+		}
+
+		trimend(s2);					//removing extra spaces and update string
+		trimbegin(s2);
+		advancedTrim(s2);
+		updateString(s2);
+
+
+		for (int i = 0; i < NVar; i++)   //search if there's an existant matrix variable name (A or B etc.) in the string 
+		{
+			pos = s2.find(variableNames[i]);
+			while (pos != -1)
+			{
+				s2.replace(pos, varName.length(), Matrices[i].sendString());
+				pos = s2.find(variableNames[i]);
+			}
+		}
+
+		s2 = advancedConcatination(s2);   // the string is in the standard format of matrix
+		x.copy(s2);
+
+		for (int i = 0; i <= NVar; i++)  //search if the variable before = exists or not in variableNames
+		{
+			if (variableNames[i] == varName)         //update the value of existant matrix
+				index = i;
+			else									//add new matrix to Matrices
+			{
+				index = NVar;
+				variableNames[index] = varName;
+				NVar++;
+				break;
+			}
+		}
+		Matrices[index] = x;
+		if (flag == 0){ cout << Matrices[index].getString(); } /*print the matrix when there is no semicolon in the end of the operation*/
+	}
+
+	//if just the Matrix name is written to be printed
+	else
+	{
+		varName = operation;
+		trimSpace(varName);
+		trimend(varName);
+		for (int i = 0; i <= NVar; i++)
+		{
+			if (variableNames[i] == varName)
+				cout << Matrices[i].getString() << endl;
+			else throw("Error:you try to print undefined Matrix");
+		}
+	}
+
+	return Matrices[index].sendString();
+}
+
+string modify(string& s)
+{
+	CMatrix A;
+	CMatrix B;
+	string s1, s2, s3;
+	int i;
+	int j;
+	int k;
+
+	while (s.find("] [") != -1 || s.find("],[") != -1)
+	{
+		i = s.find("] [");
+		k = s.find("],[");
+		if (i != -1)
+		{
+			s1 = s.substr(i + 2);
+		}
+		else if (k != -1)
+		{
+			s1 = s.substr(k + 2);
+		}
+		j = s1.find("]");
+		s1 = s1.substr(0, j + 1);
+		A.copy(s1);
+
+		if (i != -1)
+		{
+			s2 = s.substr(0, i + 1);
+		}
+		else if (k != -1)
+		{
+			s2 = s.substr(0, k + 1);
+     }
+		j = s2.rfind("[");
+		s2 = s2.substr(j);
+		B.copy(s2);
+		B.concatinate(A);
+		s = s.replace(j, s1.length() + s2.length() + 1, B.sendString());
+	}
+	while (s.find("[") != -1)
+	{
+		s.erase(s.find("["), 1);
+	}
+	while (s.find("]") != -1)
+	{
+		s.erase(s.find("]"), 1);
+	}
+	s = s + "]";
+	s = '[' + s;
+	if (s[1] == ' ') s.erase(1, 1);
+	return s;
+
+}
+
+string advancedConcatination(string s)  // s= [[1.2 2.3; 1 2.3; [1.3 2.4;4.6 1.3]],[3.2 1;-7.8 2;-3.2 3; 1.2 4]]
+{
+	int i, j, k;
+	string s1, s2;
+	CMatrix A;
+	i = s.find("] [");
+	if (i != -1) s = s.replace(i + 1, 1, ",");
+	i = s.find("],[");
+	if (i < 0)
+	{
+		A.copy(s); return A.sendString();
+	}
+	while (i != -1)
+	{
+		s1 = s.substr(0, i);						// s1= [[1.2 2.3; 1 2.3; [1.3 2.4;4.6 1.3]
+		j = s1.rfind('[');
+		//if (j < 0) throw ("Error: invalid Matrix");
+		k = s1.find(']', j);
+		while (j != -1 && k != -1)
+		{
+			s1.erase(k, 1);
+			s1.erase(j, 1);							//s1= [[1.2 2.3; 1 2.3; 1.3 2.4;4.6 1.3
+			j = s1.rfind('[');
+			k = s1.find(']', j);
+		}
+		s.replace(0, i, s1);						// s= [[1.2 2.3; 1 2.3; 1.3 2.4;4.6 1.3],[3.2 1;-7.8 2;-3.2 3; 1.2 4]]
+		i = s.find("],[", i + 2);
+	}
+	i = s.rfind("],[");
+	s1 = s.substr(i + 3);
+	j = s1.rfind('[');
+	k = s1.find(']', j);
+	while (j != -1 && k != -1)
+	{
+		s1.erase(k, 1);
+		s1.erase(j, 1);							//s1= [[1.2 2.3; 1 2.3; 1.3 2.4;4.6 1.3
+		j = s1.rfind('[');
+		k = s1.find(']', j);
+	}
+	s.replace(i + 3, s1.length() + 1, s1);
+
+	s2 = modify(s);
+	A.copy(s2);
+	return A.sendString();
+}
+
+  
+  
+  
+  /////////////////////////////////end of Matrix Parsing ////////////////////////////////////////////
 int main(int argc, char*argv[])
 {
 
@@ -889,3 +1167,4 @@ int main(int argc, char*argv[])
 
 
 }
+

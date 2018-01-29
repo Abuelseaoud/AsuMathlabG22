@@ -698,6 +698,12 @@ void CMatrix::copy(string s)
 		}
 		if (row.nC>0 && (row.nC == nC || nR == 0)) addRow(row);
 		line = strtok_r(NULL, lineSeparators, &lineContext);
+		if (row.nC != nC)    
+		{
+			reset();
+			throw("invalid matrix");
+		}	
+		
 	}
 	delete[] buffer;
 }
@@ -714,7 +720,8 @@ string CMatrix::getString()
 			s += buffer;
 		} s += "\n";
 	}
-	return s;
+	if (nR>0 && nC>0 )return s;			
+	else throw("empty matrix");             
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1147,6 +1154,47 @@ CMatrix acot(CMatrix &m)                  ////////////////////// gets acot matri
 
 
 
+
+/*////////////////////////////////////////////////////////Concatinate 2 matrices\\\\\\\\\\\\\\\\\*/
+void CMatrix::concatinate(CMatrix& m)
+{
+	if (nR != m.nR)throw("Invalid matrix dimension");
+	CMatrix n(nR, nC + m.nC);
+	n.setSubMatrix(0, 0, *this);
+	int r = 0;
+	int c = nC;
+	n.setSubMatrix(r, c, m);
+	copy(n);
+}
+
+/////////////////////////////////////////////send string ////////////////////////////////////////
+string CMatrix::sendString()
+{
+	string s = "[";
+	for (int iR = 0; iR < nR; iR++)
+	{
+		for (int iC = 0; iC < nC; iC++)
+		{
+			char buffer[50];
+			if (iC < nC - 1)
+			{
+				sprintf_s(buffer, 50, "%g ", values[iR][iC]);
+				s += buffer;
+			}
+			else if (iC == nC - 1)
+			{
+				sprintf_s(buffer, 50, "%g", values[iR][iC]);
+				s += buffer;
+			}
+		}
+		if (iR != nR - 1)
+		{
+			s += ";";
+		}
+	} s += "]";
+	if (nR>0 && nC>0 )return s;			
+	else throw("empty matrix");             
+}
 
 
 

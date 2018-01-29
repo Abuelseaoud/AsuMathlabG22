@@ -87,6 +87,11 @@ public:
 	CMatrix elementDiv(double d =1.0);                                           /*return matrix of element division*/
 
 
+
+	//////////////////////////////////////////////////////////////////////////////////////////
+	void concatinate(CMatrix& m); 
+	string sendString();
+
 	/*/////////////////////////////////////////////////////////////////////////////////// trigonometric fns*/
 
 	friend CMatrix sin(CMatrix &m);                ///////////////////// sine matrix
@@ -129,6 +134,7 @@ public:
 	friend CMatrix log(CMatrix &m);               /////// log matrix
 	friend CMatrix ln(CMatrix &m);                /////// ln matrix
 	friend CMatrix exp(CMatrix &m);               /////// exp matrix
+
 
 
 
