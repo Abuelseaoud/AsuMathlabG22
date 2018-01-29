@@ -129,6 +129,272 @@ int Isoperator(char a)
 	if(a=='+'||a=='-'||a=='*'||a=='/'||a=='%'||a=='^'||a=='\'')return 1;
 	else return 0;
 }
+CMatrix postfixCalculation(string  s)
+{
+		trimSpace(s);
+    
+	if(s[0]=='-'||s[0]=='+')
+      {
+    		s.insert(0,1,'0');
+
+      }
+
+    for(int i=1;i<s.length()-1;i++)
+    {
+    	if(s[i]=='\'')
+    		{
+    			 if(!(Isoperator(s[i+1])||s[i+1]==')'))
+    			 	   s.insert(i+1,1,'*');
+
+    		}
+    	if((s[i]=='-'||s[i]=='+')&&s[i-1]=='(')
+    		{
+    			s.insert(i,1,'0');	
+    		}
+    }
+
+
+    if(s.length()>1)
+    {
+    for(int i=1;i<(s.length()-2);i++)
+       {
+    	
+    	if(s[i]==')'&&!(Isoperator(s[i+1])||s[i+1]=='\'')&&s[i+1]!=')'&&(s[i+1]!='.'&&Isoperator(s[i+2])))
+    	{
+    	  	s.insert(i+1,1,'*');
+    	}
+
+    	if(s[i]=='('&&(!Isoperator(s[i-1]))&&s[i-1]!='(')
+    	{
+    	  	s.insert(i,1,'*');
+    	}
+       }
+    }
+
+   
+
+
+    
+
+    int flag=1;
+    int flagpower=0;
+    stack <string> ope,post,ex;
+    stack <CMatrix> result;
+    int sum=0;
+    char* infix = new char[s.length() + 1];
+	strcpy(infix, s.c_str());
+	char* spearators = "+/*-^% \'";
+	char* token = strtok(infix, spearators);
+	while (token)
+	{ int counter=0;
+	    sum+=strlen(token);
+	    if(token[strlen(token)-1]=='.'){token[strlen(token)-1]=NULL;flagpower=1;}
+	    while(token[0]=='('){ope.push("(");token++;}
+	    while(token[strlen(token)-1]==')')
+            {
+                token[strlen(token)-1]=NULL;   counter++; 
+            }
+
+        post.push(token);
+        while(counter)
+           {
+                while(ope.top()!="(")
+                    {
+                            post.push(ope.top());
+                            ope.pop();
+                    }
+                    ope.pop();
+                    counter--;
+            }
+
+
+
+         for(int i=0;i<1;i++)
+            {
+                if(ope.empty()) continue;
+                 while((!HasHigherPrecedence(s.substr(sum,1),ope.top()))&&(!ope.empty()))
+                        {
+                            post.push(ope.top());
+                            ope.pop();
+                            if(ope.empty()) break;
+                        }
+
+            }
+
+	    if(sum<s.length()) 
+	    	{
+	    		if((flagpower==1)&&(Isoperator(s[sum]))) ope.push(s.substr(sum,1)+".");
+	    		else ope.push(s.substr(sum,1));
+            }
+        sum++;
+		token = strtok(NULL, spearators);
+		flag++;
+		flagpower=0;
+	}
+
+	
+
+while(!post.empty())
+{
+	ex.push(post.top());
+	post.pop();
+}
+
+
+
+while(!ex.empty())
+{
+	string top=ex.top();
+	int x=index(top,tempvaribleNames,tempNVar);
+	int y=index(top,varibleNames,NVar);
+	if(Isoperator(top[0]))
+	{
+		CMatrix A =result.top();
+		result.pop();
+        if(top[0]=='+')
+        {
+        	if(A.getn()==1) result.top()+=A(0,0);
+        	else if(result.top().getn()==1) result.top()=A+result.top()(0,0);
+        	else	result.top()+=A;
+        }
+        else if(top[0]=='-')
+        {
+
+        	if(A.getn()==1) result.top()-=A(0,0);
+        	else if(result.top().getn()==1) result.top()=-A+result.top()(0,0);
+        	else	result.top()-=A;
+        }
+        else if(top[0]=='*')
+        {
+
+        	if(A.getn()==1) result.top()=result.top()*A(0,0);
+        	else if(result.top().getn()==1) result.top()=A*result.top()(0,0);
+        	else	{
+        		              if(top.length()==1)result.top()=result.top()*A;
+        		              else
+        		              {
+        		              	if(A.getnR()!=result.top().getnR() ||A.getnC()!=result.top().getnC()) throw("error  Invalid Matrices Dim");
+        		              	else
+        		              	{
+        		              		for(int r=0;r<A.getnR();r++) for(int c=0;c<A.getnC();c++)
+        		              		 { result.top().setElement(r,c,result.top()(r,c)*A(r,c));}
+        		              	}
+
+
+
+        		              }
+        		    }
+        }
+        else if(top[0]=='/')
+        {
+        	
+        	if(A.getn()==1) result.top()=result.top()*(1.0/A(0,0));
+        	else if(result.top().getn()==1) result.top()=A.elementDiv(result.top()(0,0));
+        	else	{
+        		              if(top.length()==1)result.top()=result.top()/A;
+        		              else
+        		              {
+        		              	if(A.getnR()!=result.top().getnR() ||A.getnC()!=result.top().getnC()) throw("error  Invalid Matrices Dim");
+        		              	else
+        		              	{
+        		              		for(int r=0;r<A.getnR();r++) for(int c=0;c<A.getnC();c++)
+        		              		 result.top().setElement(r,c,result.top()(r,c)/A(r,c));
+        		              	}
+
+
+
+        		              }
+        		    }
+
+        }
+        else if(top[0]=='%')
+        {
+        	int LS,RS;
+        	LS=result.top()(0,0);
+        	RS=A(0,0);
+        	LS=LS%RS;
+        	CMatrix H(LS);
+        	result.top()=H;
+        }
+
+        else if(top[0]=='^')
+        {    if (A.getn()==1)
+        	{
+        	if(top.length()>1) result.top()=result.top().powElement(A(0,0));
+        	else if(result.top().getn()==1) result.top()=result.top().powElement(A(0,0));
+        	else result.top()=result.top().pow_matrix(A(0,0));
+       	    }
+       	    else{
+                    if(A.getnR()!=result.top().getnR() ||A.getnC()!=result.top().getnC()) throw("error  Invalid Matrices Dim");
+                    else
+                    {
+
+                    		for(int r=0;r<A.getnR();r++) for(int c=0;c<A.getnC();c++)
+        		              		 result.top().setElement(r,c,pow(result.top()(r,c),A(r,c)));
+
+                    }
+       	    }
+
+        }
+        else if(top[0]=='\'')
+        {
+        	result.push(A.getTranspose());
+        }
+	}
+    else if(y!=-1)
+    {
+    	result.push(Matrices[y]);
+    }
+    else if(x!=-1)
+    {
+        result.push(tempMatrices[x]);
+
+    }
+
+    else
+    {
+    	if(isdigit(top[0]) )
+    		{
+    			CMatrix m(atof(top.c_str()));
+    	        result.push(m);
+    	    }
+
+    	else if(top.length()==1)
+    	    {
+                   throw("undefine varible");
+    	    }
+    	else
+    	{
+    		if(isdigit(top[1])&&top[0]=='.')
+    		{
+    			
+    			CMatrix m(atof(top.c_str()));
+    	        result.push(m);
+    	        
+    	    
+    		}
+    		else throw("undefine varible");
+    	}
+    }
+
+
+
+
+    ex.pop();
+
+}
+
+
+return result.top();
+
+
+
+}
+
+
+
+
+
 
 
 int main(int argc, char*argv[])
