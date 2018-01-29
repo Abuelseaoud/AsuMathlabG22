@@ -644,6 +644,80 @@ CMatrix Execution(string s )
 	return postfixCalculation(s);
 
 }
+void errordetection(string &s)
+{
+
+	int counter =0;
+	if(((   Isoperator(s[0]) && (s[0]!='+'&&s[0]!='-')|| Isoperator(s[s.length()-1]))))   throw("error:invalid expression");
+	for(int i=0;i<s.length()-1;i++)
+	{
+
+		if(Isoperator(s[i+1])&&Isoperator(s[i]))
+		{
+			if(s[i+1]=='*'&&s[i]=='*')
+			{
+				s[i]='.';s[i+1]='^';
+			}
+			else if(s[i]==s[i+1])
+			{
+
+				throw("error:invalid expression");
+			}
+			else if(s[i+1]=='+'&& s[i]!='\'')
+			{
+                       s.erase(i+1,1);
+			}
+			else if(s[i+1]=='-')
+
+			{
+				    int counter =0;
+				    s.replace(i+1,1,"(-1*");
+                     cout<<i+5<<endl;
+                     cout<<s.length()<<endl;
+                     int j=i+5;
+                     int q=s.length();
+				    for( ; j<q ;j++)
+				    	{
+				    		
+				    		if(Isoperator(s[j]) && counter==0)  { char w =s[j]; s.replace(j,1,")"+w); break;}
+				    	    else if (s[j]=='(') counter++;
+				    	    else if (s[j]==')') counter--;
+				    	    if(j==(s.length()-1)) s=s+")"; 
+				    	}	
+                     cout<<s<<endl;
+                      // throw("error: please use () ");
+			}
+			else{
+
+
+					throw("error:invalid expression");
+				}
+		}
+
+
+
+
+
+
+
+
+
+		if(s[i]=='(')
+		{
+			counter++;
+			if(Isoperator(s[i+1]) && ((s[i+1]!='+')&&(s[i+1]!='-'))) throw("error:invalid expression");
+		}
+		else if(s[i]==')')
+		{
+			counter--;
+			if(Isoperator(s[i-1])) throw("error:invalid expression");
+		}
+
+	}
+	if(counter) throw("error:invalid expression");
+}
+
+
 
 int main(int argc, char*argv[])
 {
