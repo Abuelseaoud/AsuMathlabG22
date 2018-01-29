@@ -7,6 +7,7 @@
 #include <stdarg.h>
 #include <algorithm>
 #include <cstdio>
+#include <math.h>
 ////////////////////////////////////////////////* default Constructor *///////////////////////////////////
 CMatrix::CMatrix()
 {
@@ -646,35 +647,7 @@ void CMatrix::copy(double d)
 		values[i][j] = d;
 }
 ////////////////////////////////////////////////////////////////////////////////
-/*void CMatrix::copy(string s)
-{
 
-
-	reset();
-	char* buffer = new char[s.length() + 1];
-	strcpy_s(buffer,sizeof buffer, s.c_str());
-	char* lineContext;
-	char* lineSeparators = ";\r\n";
-	char* line = strtok_s(buffer, lineSeparators, &lineContext);
-	while (line)
-	{
-		CMatrix row;
-		char* context;
-		char* separators = " []";
-		char* token = strtok_s(line, separators, &context);
-		while (token)
-		{
-			CMatrix item(atof(token));
-			row.addColumn(item);
-			token = strtok_s(NULL, separators, &context);
-		}
-		if (row.nC>0 && (row.nC == nC || nR == 0))
-			addRow(row);
-		line = strtok_s(NULL, lineSeparators, &lineContext);
-	}
-	delete[] buffer;
-
-}*/
 void CMatrix::copy(string s)
 {
 	reset();
@@ -698,12 +671,11 @@ void CMatrix::copy(string s)
 		}
 		if (row.nC>0 && (row.nC == nC || nR == 0)) addRow(row);
 		line = strtok_r(NULL, lineSeparators, &lineContext);
-		if (row.nC != nC)    
-		{
-			reset();
-			throw("invalid matrix");
-		}	
-		
+		if (row.nC != nC)    ///////// edit/////////////////
+			{
+				reset();
+				throw("error:invalid matrix");
+			}	
 	}
 	delete[] buffer;
 }
@@ -716,12 +688,13 @@ string CMatrix::getString()
 		for (int iC = 0; iC<nC; iC++)
 		{
 			char buffer[50];
-			snprintf(buffer,50, "%6.06f\t", values[iR][iC]);
+			snprintf(buffer,50, "%g\t", values[iR][iC]);
 			s += buffer;
 		} s += "\n";
 	}
-	if (nR>0 && nC>0 )return s;			
-	else throw("empty matrix");             
+
+	if (nR>0 && nC>0 )return s;				///////// edit/////////////////
+	else throw("empty matrix");
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -860,16 +833,14 @@ CMatrix CMatrix::elementDiv(double d)
 	for (int j = 0; j < nC; j++)
 	{
 		double v = getElement(i, j);
-		if (v == 0)
-		{
-			throw("Error:can't measure 1/(element of matrix) as it equal zero ");
-			break;
-		}
 		m.setElement(i, j, (d / v));
 	}
 	return m;
 
 }
+
+
+////////////////////////////////mohammed w basma w rbna ystor ///////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////////////////////////////// trigonometric fns
 
@@ -1085,7 +1056,9 @@ CMatrix CMatrix :: pow_matrix(int p)                                    ////////
 	return result ; 
 }
 
-////////////////////////////////////////////////////////////////////////////////////////logarithmic
+
+
+/////////////////////////////////////////////////////////////////////////////////////////logarithmic
 
 CMatrix log(CMatrix &m)                  ////////////////////// gets log matrix
 {
@@ -1155,19 +1128,8 @@ CMatrix acot(CMatrix &m)                  ////////////////////// gets acot matri
 
 
 
-/*////////////////////////////////////////////////////////Concatinate 2 matrices\\\\\\\\\\\\\\\\\*/
-void CMatrix::concatinate(CMatrix& m)
-{
-	if (nR != m.nR)throw("Invalid matrix dimension");
-	CMatrix n(nR, nC + m.nC);
-	n.setSubMatrix(0, 0, *this);
-	int r = 0;
-	int c = nC;
-	n.setSubMatrix(r, c, m);
-	copy(n);
-}
 
-/////////////////////////////////////////////send string ////////////////////////////////////////
+////////////////////////////////////medhat &amira &aya///////////////////////////////////
 string CMatrix::sendString()
 {
 	string s = "[";
@@ -1195,8 +1157,14 @@ string CMatrix::sendString()
 	if (nR>0 && nC>0 )return s;				
 	else throw("empty matrix sendstring");             
 }
-
-
-
-
-
+//////////////////////////////////////////////////////////////////////////////////////
+void CMatrix::concatinate(CMatrix& m)
+{
+	if (nR != m.nR)throw("Invalid matrix dimension");
+	CMatrix n(nR, nC + m.nC);
+	n.setSubMatrix(0, 0, *this);
+	int r = 0;
+	int c = nC;
+	n.setSubMatrix(r, c, m);
+	copy(n);
+}
