@@ -671,7 +671,7 @@ void CMatrix::copy(string s)
 		}
 		if (row.nC>0 && (row.nC == nC || nR == 0)) addRow(row);
 		line = strtok_r(NULL, lineSeparators, &lineContext);
-		if (row.nC != nC)    ///////// edit/////////////////
+		if ((row.nC != nC)&&(row.nC!=0))    ///////// edit/////////////////
 			{
 				reset();
 				throw("error:invalid matrix");
